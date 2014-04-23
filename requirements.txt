@@ -1,0 +1,2 @@
+flask/bin/pip install flask==0.9
+flask/bin/pip flask-wtf==0.8.4
