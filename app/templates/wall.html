@@ -26,8 +26,11 @@
 
 <body>
 	<div class="Collage">
-        <img src="/static/images/cat1.jpg" />
-        <img src="/static/images/cat2.jpg" />
+        {% for image in images %}
+			<img src="/static/images/{{ image }}" />
+        {% endfor %}
+        <!-- <img src="/static/images/cat1.jpg" />
+         <img src="/static/images/cat2.jpg" />-->
     </div>
     
 </body>
