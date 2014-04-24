@@ -1,10 +1,11 @@
 from app import app
+from flask import render_template
 
 @app.route('/')
 @app.route('/')
 def index():
-	return 'welcome to event image map'
+	return render_template('wall.html')
 
 @app.route('/upload', methods = ['GET'])
 def upload():
-	return 'upload page'
+	return render_template('wall.html')
