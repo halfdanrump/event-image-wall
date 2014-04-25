@@ -5,17 +5,25 @@
   <meta charset="utf-8">
 
   <title>DG IMAGE WALL</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
+  <meta name="description" content="Digital Garage event pictures">
+  <meta name="author" content="Halfdan Rump">
 
   <!-- <link rel="stylesheet" href="css/styles.css?v=1.0"> 
   // <script src="/static/javascript/jquery-2.1.0.min.js"></script>
   -->
   <script src="/static/javascript/jquery-2.1.0.min.js"></script>
   <script src="/static/javascript/collageplus/jquery.collagePlus.min.js"></script>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
   <script type="text/javascript" charset="utf-8">
   	$(document).ready(function(){
-  		$('.Collage').collagePlus();	
+  		var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+        socket.on('update displayed images', function(msg) {
+        	$('div#names').append('<br>Received #' + msg.images);
+        	for ( var i = 0; i < msg.images.length; i++ ) {
+    			$('div#names').append('<img src=' + msg.images[i] + '/>');
+    		}
+        	$('.Collage').collagePlus();
+        });
   	});
   	
   </script>
@@ -25,13 +33,7 @@
 </head>
 
 <body>
-	<div class="Collage">
-        {% for image in images %}
-			<img src="{{ image }}" />
-        {% endfor %}
-        <!-- <img src="/static/images/cat1.jpg" />
-         <img src="/static/images/cat2.jpg" />-->
-    </div>
+	<div class="Collage" id="names"></div>
     
 </body>
 </html>
