@@ -18,10 +18,11 @@
   	$(document).ready(function(){
   		var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
         socket.on('update displayed images', function(msg) {
-        	$('div#names').append('<br>Received #' + msg.images);
-        	for ( var i = 0; i < msg.images.length; i++ ) {
-    			$('div#names').append('<img src=' + msg.images[i] + '/>');
-    		}
+          var contents = '';
+          for ( var i = 0; i < msg.images.length; i++ ) {
+      			contents += '<img src=' + msg.images[i] + '/>';
+      		}
+          $('div#names').html(contents);
         	$('.Collage').collagePlus();
         });
   	});

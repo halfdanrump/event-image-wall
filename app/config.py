@@ -9,4 +9,4 @@ scale_std = 0.03
 
 http_debug_level = 0
 
-number_of_pictures_on_wall = 2
+number_of_pictures_on_wall = 3

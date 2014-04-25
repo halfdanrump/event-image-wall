@@ -7,17 +7,17 @@ import app.config as conf
 from threading import Thread
 
 import os
-from random import sample
+from random import sample, gauss
 import time
 
 
 def image_monitor():
 	while True:
-		time.sleep(1)
+		time.sleep(abs(gauss(0.5, 0.5)) + 0.01)
 		images = set(os.listdir(conf.resized_image_dir))
 		images.remove('.DS_Store')
 		images = set(map(lambda x: app.flaskify(conf.resized_image_dir) + x, images))
-		selected_images = sample(images, conf.number_of_pictures_on_wall)
+		selected_images = sample(images, min(conf.number_of_pictures_on_wall, len(images)))
 		# with app.app_context():
 		socketio.emit('update displayed images',
 					 {'images':selected_images},
