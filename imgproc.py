@@ -1,12 +1,11 @@
 """
 Script to be run on the device where the original images are stored
 """
-from threading import Thread
 import os
 import time
-from multiprocessing import Process
 import app.config as conf
 from datetime import datetime
+from multiprocessing import Process
 
 def image_processing_daemon():
 	# Background thread that monitors 

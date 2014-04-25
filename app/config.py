@@ -8,3 +8,5 @@ scale_mean = 0.1
 scale_std = 0.03
 
 http_debug_level = 0
+
+number_of_pictures_on_wall = 2

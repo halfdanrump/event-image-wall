@@ -1,7 +1,8 @@
-from app import app
+from app import app, socketio
 from flask import render_template, request
 import os
 import app.config as conf
+from flask.ext.socketio import emit
 
 
 @app.route('/')
@@ -25,3 +26,8 @@ def upload():
 	data = eval(request.data)
 	print ''.join(data['image_name'].split('/')[-2::])
 	return render_template('wall.html')
+
+@socketio.on('images', namespace = '/test')
+def transfer_selected_images(image_list):
+	emit('update displayed images')
+
