@@ -3,10 +3,9 @@ Script to be run on the device where the original images are stored
 """
 import os
 import time
-import app.config as conf
 from datetime import datetime
 from multiprocessing import Process
-
+from app import conf
 def image_processing_daemon():
 	# Background thread that monitors 
 	start_time = datetime.now()
