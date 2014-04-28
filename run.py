@@ -11,7 +11,10 @@ def image_monitor():
 	while True:
 		time.sleep(abs(gauss(0.5, 0.5)) + 0.01)
 		images = set(os.listdir(conf.resized_image_dir))
-		images.remove('.DS_Store')
+		try:
+			images.remove('.DS_Store')
+		except KeyError:
+			pass
 		images = set(map(lambda x: app.flaskify(conf.resized_image_dir) + x, images))
 		selected_images = sample(images, min(conf.number_of_pictures_on_wall, len(images)))
 		socketio.emit('update displayed images',

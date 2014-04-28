@@ -14,7 +14,6 @@ def image_processing_daemon():
 	while True:
 		try:
 			current_images = set(os.listdir(conf.original_image_dir))
-			current_images.remove('.DS_Store')
 			new_images = processed_images.symmetric_difference(current_images)
 			new_images = new_images - processed_images
 			try:
