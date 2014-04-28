@@ -1,8 +1,8 @@
 from app import app, socketio
 #app.run(debug = True)
-from tornado.wsgi import WSGIContainer
-from tornado.httpserver import HTTPServer
-from tornado.ioloop import IOLoop
+#from tornado.wsgi import WSGIContainer
+#from tornado.httpserver import HTTPServer
+#from tornado.ioloop import IOLoop
 import app.config as conf
 from threading import Thread
 
@@ -26,7 +26,7 @@ def image_monitor():
 if __name__ == "__main__":
 	Thread(target = image_monitor).start()
 	# app.run(debug = True)
-	socketio.run(app, host = '127.0.0.1', port = 5000)
+	socketio.run(app, host = '127.0.0.1', port = 8080)
 # http_server = HTTPServer(WSGIContainer(app))
 # http_server.listen(5000)
 # IOLoop.instance().start()
