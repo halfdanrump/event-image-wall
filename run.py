@@ -25,4 +25,4 @@ def image_monitor():
 if __name__ == "__main__":
 	Thread(target = image_monitor).start()
 	# app.run(debug = True)
-	socketio.run(app, host = '127.0.0.1', port = 8080)
+	socketio.run(app, port = 8080)

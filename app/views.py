@@ -9,7 +9,10 @@ from flask.ext.socketio import emit
 def index():
 	print conf.resized_image_dir
 	images = set(os.listdir(conf.resized_image_dir))
-	images.remove('.DS_Store')
+	try:
+		images.remove('.DS_Store')
+	except KeyError:
+		pass
 	images = set(map(lambda x: app.flaskify(conf.resized_image_dir) + x, images))
 	print images
 	return render_template('wall.html', images = images)
