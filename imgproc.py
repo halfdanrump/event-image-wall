@@ -52,10 +52,12 @@ def resize_image(current_image_dir, image_name):
 	image.save(resized_image_path)	
 	return resized_image_path
 
-
+from app.conf import remote_host, remote_port
 def upload_image(image_path):
 	try:
-		h = httplib.HTTPConnection(host = 'localhost:5000')
+		host = '%s:%s'%(remote_host, remote_port)
+		print host
+		h = httplib.HTTPConnection(host = host)
 	except IOError:
 			print 'Could not open connection to server! Make sure it is running...'
 

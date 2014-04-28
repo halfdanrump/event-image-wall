@@ -1,4 +1,5 @@
-remote_host = 'http://107.170.251.142/'
+remote_host = '107.170.251.142'
+remote_port = '80'
 
 original_image_dir = 'app/static/images/original/'
 resized_image_dir = 'app/static/images/resized/'

@@ -3,7 +3,7 @@ from flask import render_template, request
 import os
 import app.config as conf
 from flask.ext.socketio import emit
-
+from app.conf import resized_image_dir
 
 @app.route('/')
 def index():
@@ -21,13 +21,15 @@ def index():
 def new_image(images):
 	print images
 
+import uuid
 @app.route('/upload', methods = ['POST'])
 def upload():
 	# save received image to /static/images
 	# emit event to client telling it to append images
 	print 'IMAGE UPLOAD'
-	data = eval(request.data)
-	print ''.join(data['image_name'].split('/')[-2::])
+	f = open(resized_image_dir + uuid.uuid4().hex, 'w')
+	f.write(request.data)
+	f.close()
 	return render_template('wall.html')
 
 @socketio.on('images', namespace = '/test')
