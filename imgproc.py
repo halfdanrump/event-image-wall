@@ -52,22 +52,35 @@ def resize_image(current_image_dir, image_name):
 	image.save(resized_image_path)	
 	return resized_image_path
 
-from app.conf import remote_host, remote_port
+import urllib2
 def upload_image(image_path):
-	try:
-		host = '%s:%s'%(remote_host, remote_port)
-		print host
-		h = httplib.HTTPConnection(host = host)
-	except IOError:
-			print 'Could not open connection to server! Make sure it is running...'
-
-	h.set_debuglevel(conf.http_debug_level)
+	url = "http://107.170.251.142/upload"
+	header = {'Content-Type': 'image/jpeg'}
 	with open(image_path) as f:
-		data = {'image_data':f.read(), 'image_name':image_path}
-		h.request('post', '/upload', body = repr(data))
-		response = h.getresponse()
-		print response.status
-	# with open(image_path) as f:
+		image = f.read()
+	try:
+		request = urllib2.Request(url, image, header)
+		response = urllib2.urlopen(request)
+	except Exception, e:
+		print e
+
+
+# from app.conf import remote_host, remote_port
+# def upload_image(image_path):
+# 	try:
+# 		host = '%s:%s'%(remote_host, remote_port)
+# 		print host
+# 		h = httplib.HTTPConnection(host = host)
+# 	except IOError:
+# 			print 'Could not open connection to server! Make sure it is running...'
+
+# 	h.set_debuglevel(conf.http_debug_level)
+# 	with open(image_path) as f:
+# 		data = {'image_data':f.read(), 'image_name':image_path}
+# 		h.request('post', '/upload', body = repr(data))
+# 		response = h.getresponse()
+# 		print response.status
+# 	# with open(image_path) as f:
 		
 	
 if __name__ == "__main__":
