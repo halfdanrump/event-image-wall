@@ -1,7 +1,7 @@
 from app import app, socketio
 from flask import render_template, request
 import os
-import app.config as conf
+from app import conf
 from flask.ext.socketio import emit
 from app.conf import resized_image_dir
 

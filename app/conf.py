@@ -11,7 +11,7 @@ def makedir(dir):
 	except OSError:
 		pass
 
-if __name__ == "app.config":
+if os.path.isdir('app/static'):
 	makedir(original_image_dir)
 	makedir(resized_image_dir)
 

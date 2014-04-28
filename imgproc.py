@@ -33,8 +33,8 @@ def process_images(images_to_process):
 	for image_name in images_to_process:
 		current_image_dir = conf.original_image_dir
 		print 'Processing image: %s'%(current_image_dir + image_name)
-		new_image_path = resize_image(current_image_dir, image_name)
-		upload_image(new_image_path)			
+		#new_image_path = resize_image(current_image_dir, image_name)
+		upload_image(current_image_dir + image_name)			
 		
 
 
