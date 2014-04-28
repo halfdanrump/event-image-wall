@@ -9,7 +9,7 @@ import time
 
 def image_monitor():
 	while True:
-		time.sleep(abs(gauss(0.5, 0.5)) + 0.01)
+		
 		images = set(os.listdir(conf.resized_image_dir))
 		try:
 			images.remove('.DS_Store')
@@ -20,6 +20,7 @@ def image_monitor():
 		socketio.emit('update displayed images',
 					 {'images':selected_images},
 					  namespace = '/test')
+		time.sleep(10)
 
 if __name__ == "__main__":
 	Thread(target = image_monitor).start()
