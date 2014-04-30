@@ -5,6 +5,10 @@ import os
 from random import sample, gauss
 import time
 
+#from tornado.wsgi import WSGIContainer
+#from tornado.httpserver import HTTPServer
+#from tornado.ioloop import IOLoop
+
 
 def image_monitor():
 	while True:
@@ -24,4 +28,7 @@ def image_monitor():
 if __name__ == "__main__":
 	Thread(target = image_monitor).start()
 	# app.run(debug = True)
-	socketio.run(app)
+	socketio.run(app, port = 8080)
+	#http_server = HTTPServer(WSGIContainer(app))
+	#http_server.listen(5000)
+	#IOLoop.instance().start()
