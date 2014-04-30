@@ -32,15 +32,16 @@ import httplib
 def process_images(images_to_process):
 	for image_name in images_to_process:
 		current_image_dir = conf.original_image_dir
+		new_image_path = current_image_dir + image_name
 		print 'Processing image: %s'%(current_image_dir + image_name)
-		#new_image_path = resize_image(current_image_dir, image_name)
-		upload_image(current_image_dir + image_name)			
+		new_image_path = resize_image(current_image_dir, image_name)
+		upload_image(new_image_path)			
 		
 
 
 from random import gauss
 def resize_image(current_image_dir, image_name):
-	
+	print 'RESIZE!!!!!!!'
 	image = Image.open(current_image_dir + image_name)
 	w,h = conf.original_image_size
 	scale_factor = gauss(conf.scale_mean, conf.scale_std)
