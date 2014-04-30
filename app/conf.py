@@ -17,9 +17,12 @@ if os.path.isdir('app/static'):
 
 original_image_size = (2784, 1848)
 
-scale_mean = 0.3
+
+target_size = (320, 200)
+
+scale_mean = 0.2
 scale_std = 0.1
 
 http_debug_level = 0
 
-number_of_pictures_on_wall = 9
+number_of_pictures_on_wall = 64

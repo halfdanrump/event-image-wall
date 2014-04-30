@@ -36,22 +36,33 @@ def process_images(images_to_process):
 		current_image_dir = conf.original_image_dir
 		new_image_path = current_image_dir + image_name
 		print 'Processing image: %s'%(current_image_dir + image_name)
-		new_image_path = resize_image(current_image_dir, image_name)
-		upload_image(new_image_path)			
+		new_image_paths = resize_image(current_image_dir, image_name)
+		for new_image_path in new_image_paths:
+			upload_image(new_image_path)			
 		
+scalings = [4, 8, 16, 32]
 
-
-from random import gauss
+from random import gauss, sample
 def resize_image(current_image_dir, image_name):
 	image = Image.open(current_image_dir + image_name)
-	w,h = image.size
-	scale_factor = gauss(conf.scale_mean, conf.scale_std)
-	resized_image_size = (int(h * scale_factor), int(w*scale_factor))
-	print 'Resizing %s (%sx%s) to %s'%(image_name, h,w, resized_image_size)
-	image = image.resize(resized_image_size)
-	resized_image_path = conf.resized_image_dir + 'resized_' + image_name
-	image.save(resized_image_path)	
-	return resized_image_path
+	dim = list(image.size)
+	resized_image_paths = list()
+	for scaling in scalings:
+
+	# sf = float(sample([4, 8, 12, 16], 1)[0])
+		new_dim = tuple(map(lambda x: int(x / float(scaling)), dim))
+		print 'Resizing %s %s to %s'%(image_name, dim, new_dim)
+		image = image.resize(new_dim, Image.ANTIALIAS)
+		resized_image_path = conf.resized_image_dir + 'resized_%s'%scaling + image_name
+		image.save(resized_image_path)
+		resized_image_paths.append(resized_image_path)
+		print new_dim, dim
+	# scale_factor = gauss(conf.scale_mean, conf.scale_std)
+	# resized_image_size = (int(h * scale_factor), int(w*scale_factor))
+	# print 'Resizing %s (%sx%s) to %s'%(image_name, h,w, resized_image_size)
+	
+	
+	return resized_image_paths
 
 import urllib2
 def upload_image(image_path):
