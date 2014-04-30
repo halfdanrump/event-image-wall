@@ -16,8 +16,9 @@ if os.path.isdir('app/static'):
 	makedir(resized_image_dir)
 
 original_image_size = (2784, 1848)
-scale_mean = 0.1
-scale_std = 0.03
+
+scale_mean = 0.3
+scale_std = 0.1
 
 http_debug_level = 0
 

@@ -6,6 +6,8 @@ import time
 from datetime import datetime
 from multiprocessing import Process
 from app import conf
+
+
 def image_processing_daemon():
 	# Background thread that monitors 
 	start_time = datetime.now()
@@ -41,12 +43,11 @@ def process_images(images_to_process):
 
 from random import gauss
 def resize_image(current_image_dir, image_name):
-	print 'RESIZE!!!!!!!'
 	image = Image.open(current_image_dir + image_name)
-	w,h = conf.original_image_size
+	w,h = image.size
 	scale_factor = gauss(conf.scale_mean, conf.scale_std)
 	resized_image_size = (int(h * scale_factor), int(w*scale_factor))
-	# print resized_image_size
+	print 'Resizing %s (%sx%s) to %s'%(image_name, h,w, resized_image_size)
 	image = image.resize(resized_image_size)
 	resized_image_path = conf.resized_image_dir + 'resized_' + image_name
 	image.save(resized_image_path)	
