@@ -1,0 +1,20 @@
+.Collage{
+
+    /* define how much padding you want in between your images */
+    padding:10px;
+
+    }
+
+.Collage img{
+
+    /* ensures padding at the bottom of the image is correct */
+    /*vertical-align:center;*/
+
+    /* hide the images until the plugin has run. the plugin will reveal the images*/
+    opacity:0;
+
+    }
+
+#images{
+	margin: 0 auto;
+}z
