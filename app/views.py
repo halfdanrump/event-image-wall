@@ -31,7 +31,7 @@ def upload():
 	f = open(new_image, 'w')
 	f.write(request.data)
 	f.close()
-	return True
+	return render_template('wall.html')
 
 @socketio.on('images', namespace = '/test')
 def transfer_selected_images(image_list):
