@@ -1,5 +1,4 @@
-from app import app, socketio
-import app.config as conf
+from app import app, socketio, conf
 from threading import Thread
 
 import os
