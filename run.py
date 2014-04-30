@@ -26,6 +26,7 @@ def image_monitor():
 		time.sleep(10)
 
 if __name__ == "__main__":
+
 	Thread(target = image_monitor).start()
 	# app.run(debug = True)
 	socketio.run(app, port = 8080)

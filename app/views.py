@@ -27,10 +27,11 @@ def upload():
 	# save received image to /static/images
 	# emit event to client telling it to append images
 	print 'IMAGE UPLOAD'
-	f = open(resized_image_dir + uuid.uuid4().hex, 'w')
+	new_image = resized_image_dir + uuid.uuid4().hex
+	f = open(new_image, 'w')
 	f.write(request.data)
 	f.close()
-	return render_template('wall.html')
+	return True
 
 @socketio.on('images', namespace = '/test')
 def transfer_selected_images(image_list):

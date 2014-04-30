@@ -22,8 +22,10 @@
           for ( var i = 0; i < msg.images.length; i++ ) {
       			contents += '<img src=' + msg.images[i] + '/>';
       		}
+          $('div#names').fadeOut(1000);
           $('div#names').html(contents);
         	$('.Collage').collagePlus();
+          $('div#names').fadeIn(1000);
         });
   	});
   	
