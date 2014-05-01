@@ -1,10 +1,8 @@
 from flask import Flask
 app = Flask(__name__)
-app.config.update(
-	DEBUG = True,
-	PROPAGATE_EXCEPTIONS = True
-	)
-
+app.config.from_object('app.conf.Development')
+import redis
+rcon = redis.Redis()
 
 from app.conf import *
 
