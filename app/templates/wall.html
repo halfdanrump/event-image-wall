@@ -16,12 +16,6 @@
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
   <link rel="stylesheet" type="text/css" href="static/stylesheets/style.css">
   <script type="text/javascript" charset="utf-8">
-  	function test(msg){
-        console.log('before msg');
-        console.log(msg);
-        console.log('after msg');
-      };
-
     function arrange_images(msg) {
         var contents = '';
         for ( var i = 0; i < msg.images.length; i++ ) {
@@ -31,9 +25,8 @@
         $('div#images').fadeOut(500, function(){
           $('div#images').html(contents);
           $('.Collage').collagePlus({
-            // 'fadeSpeed'       : 1000,
-            'targetHeight'    : 400,
-            'direction'       : 'vertical',
+            'targetHeight'              : 400,
+            'direction'                 : 'vertical',
             'allowPartialLastRow'       : false
           });
           $('div#images').fadeIn(500);  
