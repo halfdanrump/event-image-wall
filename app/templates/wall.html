@@ -16,28 +16,40 @@
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
   <link rel="stylesheet" type="text/css" href="static/stylesheets/style.css">
   <script type="text/javascript" charset="utf-8">
-  	$(document).ready(function(){
-  		function test(){
-        console.log('asdjlaskljdalkjsdklasdlkasl')
+  	function test(msg){
+        console.log('before msg');
+        console.log(msg);
+        console.log('after msg');
       };
-      var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
-        socket.on('update displayed images', function(msg) {
-          var contents = '';
-          for ( var i = 0; i < msg.images.length; i++ ) {
-      			contents += '<img src=' + msg.images[i] + '/>';
-      		}
-          $('div#images').fadeOut(3000, function(){
-            $('div#images').html(contents);
-            $('.Collage').collagePlus({
-              // 'fadeSpeed'       : 1000,
-              'targetHeight'    : 400,
-              'direction'       : 'vertical',
-              'allowPartialLastRow'       : false
-            });
-            $('div#images').fadeIn(3000);  
+
+    function arrange_images(msg) {
+        var contents = '';
+        for ( var i = 0; i < msg.images.length; i++ ) {
+          contents += '<img src="' + msg.images[i] + '"/>';
+        }
+        console.log(contents);
+        $('div#images').fadeOut(500, function(){
+          $('div#images').html(contents);
+          $('.Collage').collagePlus({
+            // 'fadeSpeed'       : 1000,
+            'targetHeight'    : 400,
+            'direction'       : 'vertical',
+            'allowPartialLastRow'       : false
           });
-          
+          $('div#images').fadeIn(500);  
         });
+      }
+
+    $(document).ready(function(){
+      var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+
+      socket.emit('request images', function(msg){
+        // arrange_images(msg);
+      });
+
+      socket.on('images', function(msg){
+        arrange_images(msg);
+      });
   	});
   	
   </script>
@@ -47,7 +59,7 @@
 </head>
 
 <body>
-	<div class="Collage" id="images"></div>
+	<div class="Collage" id="images">{{ images }}</div>
     
 </body>
 </html>
