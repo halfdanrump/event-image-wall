@@ -5,7 +5,8 @@ import os
 import time
 from datetime import datetime
 from multiprocessing import Process
-from app import conf
+from app import conf, app
+
 
 
 def image_processing_daemon():
@@ -65,9 +66,12 @@ def resize_image(current_image_dir, image_name):
 	
 	return resized_image_paths
 
+
+
 import urllib2
 def upload_image(image_path):
-	url = "http://107.170.251.142/upload"
+	url = '%s:%s/upload'%(app.config['HOST'], app.config['PORT'])
+	print url
 	header = {'Content-Type': 'image/jpeg'}
 	with open(image_path) as f:
 		image = f.read()

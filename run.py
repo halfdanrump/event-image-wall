@@ -51,7 +51,19 @@ def image_monitor():
 
 if __name__ == "__main__":
 
-	Thread(target = image_monitor2).start()
+	"""
+	In image monitor on camera laptop: 
+		- Move image to uploaded folder when it has been uploaded
+	In image monitor on server: 
+		- Main list of all received images in redis
+			- 
+		- Maintain set/list of currently showed pictures in redis
+			- GET request fetches list
+			- socket event new_image modifies list and pushes the list to clients
+
+	"""
+
+	# Thread(target = image_monitor2).start()
 	# app.run(debug = True)
 	socketio.run(app, port = 8080)
 	#http_server = HTTPServer(WSGIContainer(app))
