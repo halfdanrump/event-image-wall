@@ -9,10 +9,34 @@ import time
 #from tornado.httpserver import HTTPServer
 #from tornado.ioloop import IOLoop
 
+def image_monitor2():
+	processed_images = set()
+	image_queue = list()
+	while True:
+		try:
+			current_images = set(os.listdir(conf.resized_image_dir))
+			new_images = processed_images.symmetric_difference(current_images)
+			new_images = new_images - processed_images
+			try:
+				new_images.remove('.DS_Store')
+			except KeyError:
+				pass
+			if new_images:
+				print new_images
+				for i in list(new_images): image_queue.append(i)
+				images_to_show = map(lambda x: app.flaskify(conf.resized_image_dir) + x, image_queue[-5::])
+				print images_to_show
+				socketio.emit('update displayed images',
+					 {'images':images_to_show},
+					  namespace = '/test')
+				processed_images = processed_images.union(new_images)
+			time.sleep(1)
+		except KeyboardInterrupt:
+			raise resized_image_dir
+
 
 def image_monitor():
 	while True:
-		
 		images = set(os.listdir(conf.resized_image_dir))
 		try:
 			images.remove('.DS_Store')
@@ -27,7 +51,7 @@ def image_monitor():
 
 if __name__ == "__main__":
 
-	Thread(target = image_monitor).start()
+	Thread(target = image_monitor2).start()
 	# app.run(debug = True)
 	socketio.run(app, port = 8080)
 	#http_server = HTTPServer(WSGIContainer(app))
