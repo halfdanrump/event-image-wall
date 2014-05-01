@@ -1,3 +1,9 @@
+import argparse
+parser = argparse.ArgumentParser(description = 'Run as main to start the Event Image Wall app server')
+parser.add_argument('-p', '--production', help = 'Set production environment', action = "store_true")
+parser.add_argument('-b', '--behavior', help = 'Specify how images are displayed on the wall', choices = ('queue', 'random'), required = True)
+args = parser.parse_args()
+
 from app import app, socketio, conf
 from threading import Thread
 
@@ -9,33 +15,33 @@ import time
 #from tornado.httpserver import HTTPServer
 #from tornado.ioloop import IOLoop
 
-def image_monitor2():
-	processed_images = set()
-	image_queue = list()
-	while True:
-		try:
-			current_images = set(os.listdir(conf.resized_image_dir))
-			new_images = processed_images.symmetric_difference(current_images)
-			new_images = new_images - processed_images
-			try:
-				new_images.remove('.DS_Store')
-			except KeyError:
-				pass
-			if new_images:
-				print new_images
-				for i in list(new_images): image_queue.append(i)
-				images_to_show = map(lambda x: app.flaskify(conf.resized_image_dir) + x, image_queue[-5::])
-				print images_to_show
-				socketio.emit('update displayed images',
-					 {'images':images_to_show},
-					  namespace = '/test')
-				processed_images = processed_images.union(new_images)
-			time.sleep(1)
-		except KeyboardInterrupt:
-			raise resized_image_dir
+# def image_monitor2():
+# 	processed_images = set()
+# 	image_queue = list()
+# 	while True:
+# 		try:
+# 			current_images = set(os.listdir(conf.resized_image_dir))
+# 			new_images = processed_images.symmetric_difference(current_images)
+# 			new_images = new_images - processed_images
+# 			try:
+# 				new_images.remove('.DS_Store')
+# 			except KeyError:
+# 				pass
+# 			if new_images:
+# 				print new_images
+# 				for i in list(new_images): image_queue.append(i)
+# 				images_to_show = map(lambda x: app.flaskify(conf.resized_image_dir) + x, image_queue[-5::])
+# 				print images_to_show
+# 				socketio.emit('update displayed images',
+# 					 {'images':images_to_show},
+# 					  namespace = '/test')
+# 				processed_images = processed_images.union(new_images)
+# 			time.sleep(1)
+# 		except KeyboardInterrupt:
+# 			raise resized_image_dir
 
 
-def image_monitor():
+def random_image_daemon():
 	while True:
 		images = set(os.listdir(conf.resized_image_dir))
 		try:
@@ -63,7 +69,8 @@ if __name__ == "__main__":
 
 	"""
 
-	# Thread(target = image_monitor2).start()
+	if args.behavior == 'random':
+		Thread(target = random_image_daemon).start()
 	# app.run(debug = True)
 	socketio.run(app, port = 8080)
 	#http_server = HTTPServer(WSGIContainer(app))
