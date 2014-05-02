@@ -21,9 +21,6 @@ class BasicConfig():
 	def __init__(self):
 		self.makedir(self.ORIGINAL_IMAGE_DIR)
 
-	def __getitem__(self, item):
-		return getattr(self, item)
-
 
 class Production(BasicConfig):
 	HOST = 'http://107.170.251.142'
