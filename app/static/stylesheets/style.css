@@ -12,9 +12,11 @@
 
     /* hide the images until the plugin has run. the plugin will reveal the images*/
     opacity:0;
-
     }
 
 #images{
 	margin: 0 auto;
-}z
+	width: 1600px ;
+	margin-left: auto ;
+	margin-right: auto ;
+}

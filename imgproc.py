@@ -1,18 +1,23 @@
 """
 Script to be run on the device where the original images are stored
+
+Example: python imgproc.py -i app/static/images/original/ -t tmp/ -r 8 -r 4
 """
 import os
 import time
 from datetime import datetime
 from multiprocessing import Process
-from app import app
+
 import argparse
 
 parser = argparse.ArgumentParser(description = 'Run to upload images to server as they are placed in the image folder')
-parser.add_argument('-i', '--image-folder', help = 'Specify image folder', default = app.config['ORIGINAL_IMAGE_DIR'])
-parser.add_argument('-t', '--temp-folder', help = 'Specify image folder', default = app.config['RESIZED_IMAGE_DIR'])
-parser.add_argument('-r', '--resize-ratios', help = 'Specify integers that the image dimensions will be divided by', default = [4,8])
+parser.add_argument('-i', '--image-folder', help = 'Specify image folder', required = True)
+parser.add_argument('-t', '--temp-folder', help = 'Specify image folder', required = True)
+parser.add_argument('-r', '--resize-ratios', help = 'Specify integers that the image dimensions will be divided by', type = int, action = 'append')
 args = parser.parse_args()
+
+if not hasattr(args, 'resize_ratios'):
+	args.resize_ratios = [4, 8]
 
 print args
 
@@ -79,24 +84,6 @@ def upload_image(image_path):
 		response = urllib2.urlopen(request)
 	except Exception, e:
 		print e
-
-
-# from app.conf import remote_host, remote_port
-# def upload_image(image_path):
-# 	try:
-# 		host = '%s:%s'%(remote_host, remote_port)
-# 		print host
-# 		h = httplib.HTTPConnection(host = host)
-# 	except IOError:
-# 			print 'Could not open connection to server! Make sure it is running...'
-
-# 	h.set_debuglevel(conf.http_debug_level)
-# 	with open(image_path) as f:
-# 		data = {'image_data':f.read(), 'image_name':image_path}
-# 		h.request('post', '/upload', body = repr(data))
-# 		response = h.getresponse()
-# 		print response.status
-# 	# with open(image_path) as f:
 		
 	
 if __name__ == "__main__":
