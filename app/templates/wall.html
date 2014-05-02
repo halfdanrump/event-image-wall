@@ -43,6 +43,10 @@
       socket.on('images', function(msg){
         arrange_images(msg);
       });
+
+      socket.on('update wall pics', function(msg){
+        arrange_images(msg);
+      });
   	});
   	
   </script>

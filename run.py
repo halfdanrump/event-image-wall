@@ -9,17 +9,19 @@ import time
 
 def random_image_daemon():
 	while True:
-		images = set(os.listdir(conf.resized_image_dir))
+		images = set(os.listdir(app.config['RESIZED_IMAGE_DIR']))
 		try:
 			images.remove('.DS_Store')
 		except KeyError:
 			pass
-		images = set(map(lambda x: app.flaskify(conf.resized_image_dir) + x, images))
-		selected_images = sample(images, min(conf.number_of_pictures_on_wall, len(images)))
-		socketio.emit('update displayed images',
+		images = set(map(lambda x: app.flaskify(app.config['RESIZED_IMAGE_DIR']) + x, images))
+		selected_images = sample(images, min(app.config['N_WALLPICS'], len(images)))
+		
+		print selected_images
+		socketio.emit('update wall pics',
 					 {'images':selected_images},
 					  namespace = '/test')
-		time.sleep(10)
+		time.sleep(5)
 
 if __name__ == "__main__":
 
