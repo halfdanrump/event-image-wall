@@ -7,8 +7,8 @@ import os
 import time
 from datetime import datetime
 from multiprocessing import Process
-
-
+import random
+import uuid
 # # if not hasattr(args, 'resize_ratios'):
 # 	args.resize_ratios = [4, 8]
 
@@ -38,7 +38,7 @@ def image_processing_daemon():
 			raise
 
 
-from PIL import Image
+from PIL import Image, ImageFilter, ImageEnhance
 import httplib
 def process_images(images_to_process):
 	for image_name in images_to_process:
@@ -52,11 +52,29 @@ def process_images(images_to_process):
 			upload_image(new_image_path)
 		move_image(image_name)
 
+# def monochrome(image_name):
+# 	image = Image.open(image_name)
+# 	image = image.convert('L')
+# 	image = image.filter(ImageFilter.ModeFilter(size = 10))
+# 	image = ImageEnhance.Contrast(image).enhance(2)
+
+def apply_random_processing(image_name, save_folder):
+	image = Image.open(image_name)
+	
+	def preset_1(image):
+		return ImageEnhance.Contrast(image.convert('L')).enhance(2).filter(ImageFilter.ModeFilter(size = 10)).filter(ImageFilter.CONTOUR())
+
+	def preset_2(image):
+		return image.filter(ImageFilter.MedianFilter(size = 10))
+	# print 'preset_%s'%random.sample([1,2],1)[0]
+	processed_image = eval('preset_%s'%random.sample([1,2],1)[0])(image)
+	processed_images.save(save_folder + uuid.uuid4().hex)
 
 import shutil
 def move_image(image_name):
 	print "Moving %s to %s"%(args.image_folder + image_name, args.untouched_folder + image_name)
 	shutil.move(args.image_folder + image_name, args.untouched_folder + image_name)
+
 
 from random import gauss, sample
 def resize_image(current_image_dir, image_name):

@@ -12,3 +12,5 @@ ujson==1.33
 #Image==1.2
 Pillow==2.4.0
 redis
+numpy
+scikit-image
