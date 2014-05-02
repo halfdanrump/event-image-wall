@@ -30,10 +30,3 @@ class Development(BasicConfig):
 	HOST = 'http://127.0.0.1'
 	PORT = '8080'
 
-remote_host = 'http://107.170.251.142'
-remote_port = '80'
-
-original_image_size = (2784, 1848)
-
-target_size = (320, 200)
-
