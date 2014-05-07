@@ -22,7 +22,7 @@ def random_image_daemon():
 		socketio.emit('update wall pics',
 					 {'images':selected_images},
 					  namespace = '/test')
-		time.sleep(5)
+		time.sleep(flapp.config['WALL_REFRESH_RATE'])
 
 if __name__ == "__main__":
 
@@ -42,13 +42,14 @@ if __name__ == "__main__":
 	parser.add_argument('-p', '--production', help = 'Set production environment', action = "store_true")
 	parser.add_argument('-b', '--behavior', help = 'Specify how images are displayed on the wall', choices = ('queue', 'random'), default = 'queue')
 	parser.add_argument('--delete-old-images', action = "store_true")
+	parser.add_argument('-r', '--wall-refresh-rate', type = int, default = 30)
 	args = parser.parse_args()	
 
 	from app.conf import Production, Development
 	if args.production:
-		config = Production(behavior = args.behavior)
+		config = Production(behavior = args.behavior, wall_refresh_rate = args.wall_refresh_rate)
 	else:
-		config = Development(behavior = args.behavior)
+		config = Development(behavior = args.behavior, wall_refresh_rate = args.wall_refresh_rate)
 
 	flapp.config.from_object(config)
 

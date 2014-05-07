@@ -21,13 +21,15 @@ class BasicConfig():
 		except OSError:
 			pass
 
-	def __init__(self, behavior):
+	def __init__(self, behavior, wall_refresh_rate):
 		
 		if behavior == 'queue':
 			self.IMAGE_UPLOAD_DIR = 'app/static/images/uploaded/queue/'
 		elif behavior == 'random':
 			self.IMAGE_UPLOAD_DIR =  'app/static/images/uploaded/random/'
 		
+		self.WALL_REFRESH_RATE = wall_refresh_rate
+
 		self.makedir(self.ORIGINAL_IMAGE_DIR)
 		self.makedir(self.IMAGE_UPLOAD_DIR)
 
