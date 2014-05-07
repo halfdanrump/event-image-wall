@@ -3,7 +3,7 @@ from app import socketio
 from flask import render_template, request
 import os
 from flask.ext.socketio import emit
-
+import time
 
 @app.route('/new', )
 def new_image(images):
@@ -45,6 +45,7 @@ def upload():
 	f = open(new_image_path, 'w')
 	f.write(request.data)
 	f.close()
+	time.sleep(1)
 	return render_template('wall.html')
 
 

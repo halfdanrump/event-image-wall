@@ -21,15 +21,14 @@
         for ( var i = 0; i < msg.images.length; i++ ) {
           contents += '<img src="' + msg.images[i] + '"/>';
         }
-        console.log(contents);
-        $('div#images').fadeOut(500, function(){
+        $('div#images').fadeOut(1000, function(){
           $('div#images').html(contents);
           $('.Collage').collagePlus({
             'targetHeight'              : 400,
             'direction'                 : 'vertical',
             'allowPartialLastRow'       : false
           });
-          $('div#images').fadeIn(500);  
+          $('div#images').fadeIn(1000);  
         });
       }
 
