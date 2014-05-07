@@ -113,7 +113,7 @@ if __name__ == "__main__":
 	parser.add_argument('-i', '--image-folder', help = 'Specify image folder to monitor for new images', required = True)
 	parser.add_argument('-u', '--untouched-folder', help = 'Specify where to move untouched images', required = True)
 	parser.add_argument('-t', '--temp-folder', help = 'Specify temp folder where processed images are stored', required = True)
-	parser.add_argument('-b', '--behavior', help = 'Specify how the images should be resized to fit with display style', choices = ('queue', 'random'), default = 'queue')
+	parser.add_argument('-b', '--behavior', help = 'Specify how the images should be resized to fit with display style', choices = ('queue', 'random'))
 	
 	args = parser.parse_args()
 	
