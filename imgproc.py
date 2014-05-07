@@ -9,8 +9,6 @@ from datetime import datetime
 from multiprocessing import Process
 import random
 import uuid
-# # if not hasattr(args, 'resize_ratios'):
-# 	args.resize_ratios = [4, 8]
 
 import argparse
 from PIL import Image, ImageFilter, ImageEnhance
@@ -24,9 +22,6 @@ def image_processing_daemon():
 	processed_images = set()
 	while True:
 		try:
-			# current_images = set(os.listdir(args.image_folder))
-			# new_images = processed_images.symmetric_difference(current_images)
-			# new_images = new_images - processed_images
 			new_images = set(os.listdir(args.image_folder))
 			try:
 				new_images.remove('.DS_Store')
@@ -68,7 +63,7 @@ def apply_random_processing(image_name, save_folder):
 
 	def preset_2(image):
 		return image.filter(ImageFilter.MedianFilter(size = 10))
-	# print 'preset_%s'%random.sample([1,2],1)[0]
+	
 	processed_image = eval('preset_%s'%random.sample([1,2],1)[0])(image)
 	processed_images.save(save_folder + uuid.uuid4().hex)
 
@@ -119,11 +114,9 @@ if __name__ == "__main__":
 	parser.add_argument('-u', '--untouched-folder', help = 'Specify where to move untouched images', required = True)
 	parser.add_argument('-t', '--temp-folder', help = 'Specify temp folder where processed images are stored', required = True)
 	parser.add_argument('-b', '--behavior', help = 'Specify how the images should be resized to fit with display style', choices = ('queue', 'random'), default = 'queue')
-	# parser.add_argument('-r', '--resize-ratios', help = 'Specify integers that the image dimensions will be divided by', type = int, action = 'append')
+	
 	args = parser.parse_args()
 	
-	# if not args.resize_ratios:
-	# 	args.resize_ratios = [4, 8]
 	if args.behavior == 'queue':
 		args.resize_ratios = [8]
 	elif args.behavior == 'random':
@@ -138,4 +131,3 @@ if __name__ == "__main__":
 		print config.HOST
 	image_processing_daemon()
 
-	# Process(target = image_processing_daemon).start()

@@ -4,33 +4,11 @@ from flask import render_template, request
 import os
 from flask.ext.socketio import emit
 
-# @app.route('/')
-# def index():
-# 	print conf.resized_image_dir
-# 	images = set(os.listdir(conf.resized_image_dir))
-# 	try:
-# 		images.remove('.DS_Store')
-# 	except KeyError:
-# 		pass
-# 	images = set(map(lambda x: app.flaskify(conf.resized_image_dir) + x, images))
-# 	print images
-# 	return render_template('wall.html', images = images)
 
 @app.route('/new', )
 def new_image(images):
 	print images
 
-# import uuid
-# @app.route('/upload', methods = ['POST'])
-# def upload():
-# 	# save received image to /static/images
-# 	# emit event to client telling it to append images
-# 	print 'IMAGE UPLOAD'
-# 	new_image = resized_image_dir + uuid.uuid4().hex
-# 	f = open(new_image, 'w')
-# 	f.write(request.data)
-# 	f.close()
-# 	return render_template('wall.html')
 
 from app import rcon
 def get_wall_images():
@@ -39,19 +17,13 @@ def get_wall_images():
 @app.route('/')
 def index():
 	images = get_wall_images()
-	print 'AFLDJASDIJASDIJ'
-	print images
-	print 'JAAPO(*&(*&(*&(*&(&'
-	# socketio.emit('update displayed images',
-	# 			{'images':get_wall_images()},
-	# 			namespace = '/test')
 	return render_template('wall.html')
 
 
 
 
 import uuid
-# from app.conf import showing_key, all_key, number_of_pictures_on_wall
+
 @app.route('/upload', methods = ['POST'])
 def upload():
 	# save received image to /static/images

@@ -11,10 +11,7 @@ class BasicConfig():
 	N_WALLPICS = 5
 	WALL_BEHAVIOR = 'QUEUE'
 	ORIGINAL_IMAGE_DIR = 'app/static/images/original/'
-	# RESIZED_IMAGE_DIR = 'app/static/images/resized/'
-	# QUEUE_IMAGE_DIR = 'app/static/images/uploaded/queue/'
-	# RANDOM_IMAGE_DIR = 'app/static/images/uploaded/random/'
-
+	
 	def makedir(self, dir):
 		try:
 			os.makedirs(dir)

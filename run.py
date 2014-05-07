@@ -26,17 +26,6 @@ def random_image_daemon():
 
 if __name__ == "__main__":
 
-	"""
-	In image monitor on camera laptop: 
-		- Move image to uploaded folder when it has been uploaded
-	In image monitor on server: 
-		- Main list of all received images in redis
-			- 
-		- Maintain set/list of currently showed pictures in redis
-			- GET request fetches list
-			- socket event new_image modifies list and pushes the list to clients
-
-	"""
 	
 	parser = argparse.ArgumentParser(description = 'Run as main to start the Event Image Wall app server')
 	parser.add_argument('-p', '--production', help = 'Set production environment', action = "store_true")
