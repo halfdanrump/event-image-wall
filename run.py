@@ -7,16 +7,16 @@ from random import sample, gauss
 import time
 import argparse
 from app import rcon
-
+from app.views import add_image_to_wall_q
 
 def random_image_daemon():
 	while True:
-		images = set(os.listdir(flapp.config['IMAGE_UPLOAD_DIR']))
+		image_names = set(os.listdir(flapp.config['IMAGE_UPLOAD_DIR']))
 		try:
-			images.remove('.DS_Store')
+			image_names.remove('.DS_Store')
 		except KeyError:
 			pass
-		images = set(map(lambda x: flapp.config['IMAGE_UPLOAD_DIR'] + x, images))
+		images = set(map(lambda x: flapp.flaskify(flapp.config['IMAGE_UPLOAD_DIR']) + x, image_names))
 		selected_images = sample(images, min(flapp.config['N_WALLPICS'], len(images)))
 		print images
 		
@@ -44,12 +44,21 @@ if __name__ == "__main__":
 
 	flapp.config.from_object(config)
 
+	rcon.delete(flapp.config['REDIS_WALL_Q'])
+	rcon.delete(flapp.config['REDIS_ALL_Q'])
+	
+	if args.behavior == 'queue':
+		previous_images = set(os.listdir(flapp.config['IMAGE_UPLOAD_DIR']))
+		previous_images = map(lambda f: flapp.config['IMAGE_UPLOAD_DIR'] + f, previous_images) 
+		for img in previous_images:
+			add_image_to_wall_q(img)
+
 	if args.delete_old_images:
 		print 'Deleting old images'
 		shutil.rmtree(flapp.config['IMAGE_UPLOAD_DIR'])
 		os.makedirs(flapp.config['IMAGE_UPLOAD_DIR'])
-		rcon.delete(flapp.config['REDIS_WALL_Q'])
-		rcon.delete(flapp.config['REDIS_ALL_Q'])
+		
+
 
 
 	if args.behavior == 'random':

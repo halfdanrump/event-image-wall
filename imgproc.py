@@ -31,10 +31,9 @@ def image_processing_daemon():
 				print 'Uptime %s - %s'%(str(datetime.now() - start_time), new_images)
 				process_images(new_images)
 				processed_images = processed_images.union(new_images)
-			time.sleep(1)
 		except KeyboardInterrupt:
 			raise
-
+		time.sleep(1)
 
 
 def process_images(images_to_process):
@@ -120,7 +119,7 @@ if __name__ == "__main__":
 	if args.behavior == 'queue':
 		args.resize_ratios = [8]
 	elif args.behavior == 'random':
-		args.resize_ratios = [4, 8, 16]
+		args.resize_ratios = [4, 8, 16, 32, 48]
 
 	if args.production:
 		from conf import Production
