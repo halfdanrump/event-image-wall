@@ -6,6 +6,7 @@ import shutil
 from random import sample, gauss
 import time
 import argparse
+from app import rcon
 
 
 def random_image_daemon():
@@ -15,10 +16,10 @@ def random_image_daemon():
 			images.remove('.DS_Store')
 		except KeyError:
 			pass
-		images = set(map(lambda x: flapp.flaskify(flapp.config['IMAGE_UPLOAD_DIR']) + x, images))
+		images = set(map(lambda x: flapp.config['IMAGE_UPLOAD_DIR'] + x, images))
 		selected_images = sample(images, min(flapp.config['N_WALLPICS'], len(images)))
+		print images
 		
-		print selected_images
 		socketio.emit('update wall pics',
 					 {'images':selected_images},
 					  namespace = '/test')
@@ -47,7 +48,8 @@ if __name__ == "__main__":
 		print 'Deleting old images'
 		shutil.rmtree(flapp.config['IMAGE_UPLOAD_DIR'])
 		os.makedirs(flapp.config['IMAGE_UPLOAD_DIR'])
-		
+		rcon.delete(flapp.config['REDIS_WALL_Q'])
+		rcon.delete(flapp.config['REDIS_ALL_Q'])
 
 
 	if args.behavior == 'random':

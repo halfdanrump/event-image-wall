@@ -5,10 +5,6 @@ import os
 from flask.ext.socketio import emit
 import time
 
-@app.route('/new', )
-def new_image(images):
-	print images
-
 
 from app import rcon
 def get_wall_images():
@@ -17,6 +13,10 @@ def get_wall_images():
 @app.route('/')
 def index():
 	images = get_wall_images()
+	socketio.emit('images',
+					{'images':images},
+					namespace = '/test')
+
 	return render_template('wall.html')
 
 
@@ -28,24 +28,27 @@ import uuid
 def upload():
 	# save received image to /static/images
 	# emit event to client telling it to append images
-	print 'IMAGE UPLOAD'
 	new_image_path = app.config['IMAGE_UPLOAD_DIR'] + uuid.uuid4().hex
+
+	print 'Saving image to %s'%new_image_path
+	f = open(new_image_path, 'w')
+	f.write(request.data)
+	f.close()
+
 
 	rcon.rpush(app.config['REDIS_WALL_Q'], new_image_path)
 	if rcon.llen(app.config['REDIS_WALL_Q']) < app.config['N_WALLPICS']:
 		rcon.rpush(app.config['REDIS_ALL_Q'], new_image_path)
 	else:
 		rcon.rpush(app.config['REDIS_ALL_Q'], rcon.lpop(app.config['REDIS_WALL_Q']))
-	images = map(lambda x: '/'.join(x.split('/')[0::]), get_wall_images())
+	images = map(lambda x: '/'.join(x.split('/')[1::]), get_wall_images())
+
 	socketio.emit('images',
 					{'images':images},
 					namespace = '/test')
 
 	
-	f = open(new_image_path, 'w')
-	f.write(request.data)
-	f.close()
-	time.sleep(1)
+
 	return render_template('wall.html')
 
 
