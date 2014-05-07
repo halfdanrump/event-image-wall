@@ -38,7 +38,7 @@ class Production(BasicConfig):
 	HOST = 'http://107.170.251.142'
 	PORT = '80'
 	def __init__(self, **kwargs):
-		BasicConfig.__init__(**kwargs)
+		BasicConfig.__init__(self, **kwargs)
 
 class Development(BasicConfig):
 	HOST = 'http://127.0.0.1'
