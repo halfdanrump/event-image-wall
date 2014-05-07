@@ -8,7 +8,6 @@ class BasicConfig():
 	DEBUG = True
 	PROPAGATE_EXCEPTIONS = True
 
-	N_WALLPICS = 5
 	WALL_BEHAVIOR = 'QUEUE'
 	ORIGINAL_IMAGE_DIR = 'app/static/images/original/'
 	
@@ -18,7 +17,7 @@ class BasicConfig():
 		except OSError:
 			pass
 
-	def __init__(self, behavior, wall_refresh_rate):
+	def __init__(self, behavior, wall_refresh_rate, n_wallpics):
 		
 		if behavior == 'queue':
 			self.IMAGE_UPLOAD_DIR = 'app/static/images/uploaded/queue/'
@@ -26,7 +25,7 @@ class BasicConfig():
 			self.IMAGE_UPLOAD_DIR =  'app/static/images/uploaded/random/'
 		
 		self.WALL_REFRESH_RATE = wall_refresh_rate
-
+		self.N_WALLPICS = n_wallpics
 		self.makedir(self.ORIGINAL_IMAGE_DIR)
 		self.makedir(self.IMAGE_UPLOAD_DIR)
 

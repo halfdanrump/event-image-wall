@@ -29,16 +29,17 @@ if __name__ == "__main__":
 	
 	parser = argparse.ArgumentParser(description = 'Run as main to start the Event Image Wall app server')
 	parser.add_argument('-p', '--production', help = 'Set production environment', action = "store_true")
-	parser.add_argument('-b', '--behavior', help = 'Specify how images are displayed on the wall', choices = ('queue', 'random'))
+	parser.add_argument('-b', '--behavior', help = 'Specify how images are displayed on the wall', choices = ('queue', 'random'), required = True)
 	parser.add_argument('--delete-old-images', action = "store_true")
 	parser.add_argument('-r', '--wall-refresh-rate', type = int, default = 30)
+	parser.add_argument('-n', '--n-wallpics', type = int, default = 20)
 	args = parser.parse_args()	
 
 	from app.conf import Production, Development
 	if args.production:
-		config = Production(behavior = args.behavior, wall_refresh_rate = args.wall_refresh_rate)
+		config = Production(behavior = args.behavior, wall_refresh_rate = args.wall_refresh_rate, n_wallpics = args.n_wallpics)
 	else:
-		config = Development(behavior = args.behavior, wall_refresh_rate = args.wall_refresh_rate)
+		config = Development(behavior = args.behavior, wall_refresh_rate = args.wall_refresh_rate, n_wallpics = args.n_wallpics)
 
 	flapp.config.from_object(config)
 

@@ -36,7 +36,7 @@ def upload():
 		rcon.rpush(app.config['REDIS_ALL_Q'], new_image_path)
 	else:
 		rcon.rpush(app.config['REDIS_ALL_Q'], rcon.lpop(app.config['REDIS_WALL_Q']))
-	images = map(lambda x: '/'.join(x.split('/')[1::]), get_wall_images())
+	images = map(lambda x: '/'.join(x.split('/')[0::]), get_wall_images())
 	socketio.emit('images',
 					{'images':images},
 					namespace = '/test')
