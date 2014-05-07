@@ -1,4 +1,5 @@
-from app import app, socketio
+from app import flapp as app
+from app import socketio
 from flask import render_template, request
 import os
 from flask.ext.socketio import emit
@@ -56,7 +57,8 @@ def upload():
 	# save received image to /static/images
 	# emit event to client telling it to append images
 	print 'IMAGE UPLOAD'
-	new_image_path = app.config['RESIZED_IMAGE_DIR'] + uuid.uuid4().hex
+	new_image_path = app.config['IMAGE_UPLOAD_DIR'] + uuid.uuid4().hex
+
 	rcon.rpush(app.config['REDIS_WALL_Q'], new_image_path)
 	if rcon.llen(app.config['REDIS_WALL_Q']) < app.config['N_WALLPICS']:
 		rcon.rpush(app.config['REDIS_ALL_Q'], new_image_path)

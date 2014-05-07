@@ -1,7 +1,7 @@
 """
 Script to be run on the device where the original images are stored
 
-Example: python imgproc.py -i app/static/images/original/ -t tmp/ -r 8 -r 4
+Example: $ python imgproc.py -i app/static/images/original/ -t tmp/ -u untouched/ -b queue
 """
 import os
 import time
@@ -13,7 +13,10 @@ import uuid
 # 	args.resize_ratios = [4, 8]
 
 import argparse
-
+from PIL import Image, ImageFilter, ImageEnhance
+import shutil
+from random import gauss, sample
+import urllib2
 
 def image_processing_daemon():
 	print 'Scanning folder %s for new pictures'%args.image_folder
@@ -38,8 +41,7 @@ def image_processing_daemon():
 			raise
 
 
-from PIL import Image, ImageFilter, ImageEnhance
-import httplib
+
 def process_images(images_to_process):
 	for image_name in images_to_process:
 		current_image_dir = args.image_folder
@@ -70,13 +72,13 @@ def apply_random_processing(image_name, save_folder):
 	processed_image = eval('preset_%s'%random.sample([1,2],1)[0])(image)
 	processed_images.save(save_folder + uuid.uuid4().hex)
 
-import shutil
+
 def move_image(image_name):
 	print "Moving %s to %s"%(args.image_folder + image_name, args.untouched_folder + image_name)
 	shutil.move(args.image_folder + image_name, args.untouched_folder + image_name)
 
 
-from random import gauss, sample
+
 def resize_image(current_image_dir, image_name):
 	image = Image.open(current_image_dir + image_name)
 	dim = list(image.size)
@@ -97,7 +99,6 @@ def resize_image(current_image_dir, image_name):
 
 
 
-import urllib2
 def upload_image(image_path):
 	url = '%s:%s/upload'%(config.HOST, config.PORT)
 	print url
@@ -114,14 +115,19 @@ def upload_image(image_path):
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description = 'Run to upload images to server as they are placed in the image folder')
 	parser.add_argument('-p', '--production', help = 'Set production environment', action = "store_true")
-	parser.add_argument('-i', '--image-folder', help = 'Specify image folder', required = True)
+	parser.add_argument('-i', '--image-folder', help = 'Specify image folder to monitor for new images', required = True)
 	parser.add_argument('-u', '--untouched-folder', help = 'Specify where to move untouched images', required = True)
-	parser.add_argument('-t', '--temp-folder', help = 'Specify temp folder', required = True)
-	parser.add_argument('-r', '--resize-ratios', help = 'Specify integers that the image dimensions will be divided by', type = int, action = 'append')
+	parser.add_argument('-t', '--temp-folder', help = 'Specify temp folder where processed images are stored', required = True)
+	parser.add_argument('-b', '--behavior', help = 'Specify how the images should be resized to fit with display style', choices = ('queue', 'random'), default = 'queue')
+	# parser.add_argument('-r', '--resize-ratios', help = 'Specify integers that the image dimensions will be divided by', type = int, action = 'append')
 	args = parser.parse_args()
 	
-	if not args.resize_ratios:
-		args.resize_ratios = [4, 8]
+	# if not args.resize_ratios:
+	# 	args.resize_ratios = [4, 8]
+	if args.behavior == 'queue':
+		args.resize_ratios = [8]
+	elif args.behavior == 'random':
+		args.resize_ratios = [4, 8, 16]
 
 	if args.production:
 		from conf import Production
