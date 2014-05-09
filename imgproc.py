@@ -16,7 +16,7 @@ import shutil
 from random import gauss, sample
 import urllib2
 from glob import glob
-
+import image_effects as ie
 
 def image_processing_daemon():
 	print 'Scanning folder %s for new pictures'%args.image_folder
@@ -39,7 +39,6 @@ def image_processing_daemon():
 			raise
 		time.sleep(1)
 
-from image_effects import *
 def process_images(images_to_process):
 	for image_name in images_to_process:
 		image_source_dir = image_dir
@@ -52,24 +51,6 @@ def process_images(images_to_process):
 			upload_image(new_image_path)
 		move_image(image_name)
 
-# def monochrome(image_name):
-# 	image = Image.open(image_name)
-# 	image = image.convert('L')
-# 	image = image.filter(ImageFilter.ModeFilter(size = 10))
-# 	image = ImageEnhance.Contrast(image).enhance(2)
-
-def apply_random_processing(image_name, save_folder):
-	image = Image.open(image_name)
-	
-	def preset_1(image):
-		return ImageEnhance.Contrast(image.convert('L')).enhance(2).filter(ImageFilter.ModeFilter(size = 10)).filter(ImageFilter.CONTOUR())
-
-	def preset_2(image):
-		return image.filter(ImageFilter.MedianFilter(size = 10))
-	
-	processed_image = eval('preset_%s'%random.sample([1,2],1)[0])(image)
-	processed_images.save(save_folder + uuid.uuid4().hex)
-
 
 def move_image(image_name):
 	print "Moving %s to %s"%(args.image_folder + image_name, args.untouched_folder + image_name)
@@ -79,15 +60,14 @@ def move_image(image_name):
 
 def resize_image(current_image_dir, image_name):
 	image = Image.open(current_image_dir + image_name)
-	dim = list(image.size)
 	resized_image_paths = list()
 	for scaling in args.resize_ratios:
 		try:
-			new_dim = tuple(map(lambda x: int(x / float(scaling)), dim))
-			print 'Resizing %s %s to %s'%(image_name, dim, new_dim)
-			image = image.resize(new_dim, Image.ANTIALIAS)
-			new_image_name = 'resized_%s'%scaling + image_name
+			# image = ie.pipeline(image, ie.apply_circle_mask, [ie.resize, scaling], [ie.funky_angel, 0, 60])
+			image = ie.pipeline(image, ie.apply_circle_mask, [ie.resize, scaling], [ie.monochrome, 100], [ie.mode, 5])
+			new_image_name = uuid.uuid4().hex + image_name
 			new_image_path = args.temp_folder + new_image_name
+			
 			image.save(new_image_path)
 			resized_image_paths.append(new_image_path)
 		except Exception, e:
@@ -125,7 +105,7 @@ if __name__ == "__main__":
 	print image_dir
 	
 	if args.behavior == 'queue':
-		args.resize_ratios = [8]
+		args.resize_ratios = [3]
 	elif args.behavior == 'random':
 		args.resize_ratios = [8, 16, 32, 48]
 
