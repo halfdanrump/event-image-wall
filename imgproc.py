@@ -39,7 +39,7 @@ def image_processing_daemon():
 			raise
 		time.sleep(1)
 
-
+from image_effects import *
 def process_images(images_to_process):
 	for image_name in images_to_process:
 		image_source_dir = image_dir
