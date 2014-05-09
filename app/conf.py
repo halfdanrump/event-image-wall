@@ -8,7 +8,6 @@ class BasicConfig():
 	DEBUG = True
 	PROPAGATE_EXCEPTIONS = True
 
-	WALL_BEHAVIOR = 'QUEUE'
 	ORIGINAL_IMAGE_DIR = 'app/static/images/original/'
 	
 	def makedir(self, dir):
@@ -21,8 +20,10 @@ class BasicConfig():
 		
 		if behavior == 'queue':
 			self.IMAGE_UPLOAD_DIR = 'app/static/images/uploaded/queue/'
+			self.DISPLAY_MODE = 'queue'
 		elif behavior == 'random':
 			self.IMAGE_UPLOAD_DIR =  'app/static/images/uploaded/random/'
+			self.DISPLAY_MODE = 'random'
 		
 		self.WALL_REFRESH_RATE = wall_refresh_rate
 		self.N_WALLPICS = n_wallpics

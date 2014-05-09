@@ -15,6 +15,8 @@ from PIL import Image, ImageFilter, ImageEnhance
 import shutil
 from random import gauss, sample
 import urllib2
+from glob import glob
+
 
 def image_processing_daemon():
 	print 'Scanning folder %s for new pictures'%args.image_folder
@@ -22,11 +24,13 @@ def image_processing_daemon():
 	processed_images = set()
 	while True:
 		try:
-			new_images = set(os.listdir(args.image_folder))
-			try:
-				new_images.remove('.DS_Store')
-			except KeyError:
-				pass
+			new_images = map(lambda ftype: glob(os.path.join(image_dir, ftype)), ['*.jpg', '*.JPG'])
+			new_images = set([f.split('/')[-1] for sublist in new_images for f in sublist])
+			# new_images = set(os.listdir(args.image_folder))
+			# try:
+			# 	new_images.remove('.DS_Store')
+			# except KeyError:
+			# 	pass
 			if new_images:
 				print 'Uptime %s - %s'%(str(datetime.now() - start_time), new_images)
 				process_images(new_images)
@@ -38,11 +42,11 @@ def image_processing_daemon():
 
 def process_images(images_to_process):
 	for image_name in images_to_process:
-		current_image_dir = args.image_folder
-		new_image_path = current_image_dir + image_name
-		print 'Processing image: %s'%(current_image_dir + image_name)
+		image_source_dir = image_dir
+		new_image_path = image_source_dir + image_name
+		print 'Processing image: %s'%(image_source_dir + image_name)
 		# IMAGE PIPELINE START
-		new_image_paths = resize_image(current_image_dir, image_name)
+		new_image_paths = resize_image(image_source_dir, image_name)
 		# IMAGE PIPELINE END
 		for new_image_path in new_image_paths:
 			upload_image(new_image_path)
@@ -115,11 +119,15 @@ if __name__ == "__main__":
 	parser.add_argument('-b', '--behavior', help = 'Specify how the images should be resized to fit with display style', choices = ('queue', 'random'))
 	
 	args = parser.parse_args()
+
+	basedir = os.path.abspath(os.path.dirname(__file__))
+	image_dir = os.path.join(basedir, args.image_folder)
+	print image_dir
 	
 	if args.behavior == 'queue':
 		args.resize_ratios = [8]
 	elif args.behavior == 'random':
-		args.resize_ratios = [4, 8, 16, 32, 48]
+		args.resize_ratios = [8, 16, 32, 48]
 
 	if args.production:
 		from conf import Production
