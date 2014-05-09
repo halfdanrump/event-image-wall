@@ -1,6 +1,6 @@
 from PIL import Image, ImageEnhance, ImageFilter, ImageDraw
 
-def resize(image, scaling = 4):
+def resize(image, scaling):
 	dim = list(image.size)
 	new_dim = tuple(map(lambda x: int(x / float(scaling)), dim))
 	return image.resize(new_dim, Image.ANTIALIAS)
@@ -20,8 +20,9 @@ def monochrome(image, threshold = 150):
 def t(image):
 	return Image.eval(image, lambda x: x if x > 100 and x < 200 else 256)
 
-def crop(image, radius = 1000):
+def crop(image):
 	w, h = image.size
+	radius = int(h * 0.9 / 2)
 	mw = w / 2
 	mh = h / 2
 	box = (mw - radius, mh - radius, mw + radius, mh + radius)

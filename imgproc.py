@@ -64,7 +64,8 @@ def resize_image(current_image_dir, image_name):
 	for scaling in args.resize_ratios:
 		try:
 			# image = ie.pipeline(image, ie.apply_circle_mask, [ie.resize, scaling], [ie.funky_angel, 0, 60])
-			image = ie.pipeline(image, ie.apply_circle_mask, [ie.resize, scaling], [ie.monochrome, 100], [ie.mode, 5])
+			image = ie.pipeline(image, ie.apply_circle_mask, [ie.resize, scaling], [ie.monochrome, 100], [ie.mode, 3])
+			# image = ie.pipeline(image, [ie.resize, scaling], ie.apply_circle_mask, [ie.funky_angel, 0, 60])
 			new_image_name = uuid.uuid4().hex + image_name
 			new_image_path = args.temp_folder + new_image_name
 			
@@ -105,9 +106,9 @@ if __name__ == "__main__":
 	print image_dir
 	
 	if args.behavior == 'queue':
-		args.resize_ratios = [3]
+		args.resize_ratios = [4]
 	elif args.behavior == 'random':
-		args.resize_ratios = [8, 16, 32, 48]
+		args.resize_ratios = [6,8,16]
 
 	if args.production:
 		from conf import Production
