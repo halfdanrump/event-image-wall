@@ -26,3 +26,6 @@ var/
 # Installer logs
 pip-log.txt
 app/static/images/
+Img0310.JPG
+notes.txt
+imgproc.log
