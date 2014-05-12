@@ -4,6 +4,7 @@ import os
 from flask.ext.socketio import emit
 import time
 import uuid
+from os.path import join as pathjoin
 
 from app import rcon
 def get_wall_images():
@@ -31,7 +32,7 @@ def index():
 def upload():
 	# save received image to /static/images
 	# emit event to client telling it to append images
-	new_image_path = flapp.config['IMAGE_UPLOAD_DIR'] + uuid.uuid4().hex
+	new_image_path = pathjoin(flapp.config['IMAGE_UPLOAD_DIR'], uuid.uuid4().hex)
 
 	print 'Saving image to %s'%new_image_path
 	f = open(new_image_path, 'w')
