@@ -94,7 +94,11 @@ def resize_image(current_image_dir, image_name):
 
 
 def upload_image(image_path):
-	url = '%s:%s/upload'%(config.HOST, config.PORT)
+	if args.behavior == 'queue':
+		url = '%s:%s/upload_queue_image'%(config.HOST, config.PORT)
+	else:
+		url = '%s:%s/upload'%(config.HOST, config.PORT)
+		
 	logger.info('Uploading %s to %s'%(image_path, url))
 	header = {'Content-Type': 'image/jpeg'}
 	with open(image_path) as f:

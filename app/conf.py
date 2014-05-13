@@ -24,11 +24,21 @@ class BasicConfig():
 		elif behavior == 'random':
 			self.IMAGE_UPLOAD_DIR =  'app/static/images/uploaded/random/'
 			self.DISPLAY_MODE = 'random'
+		elif behavior == 'random':
+			self.IMAGE_UPLOAD_DIR =  'app/static/images/uploaded/random/'
+			self.DISPLAY_MODE = 'random'
 		
+		self.QUEUE_DIR = 'app/static/images/uploaded/queue/'
+		self.RANDOM_DIR = 'app/static/images/uploaded/random/'
+		self.GRID_DIR = 'app/static/images/uploaded/grid/'
 		self.WALL_REFRESH_RATE = wall_refresh_rate
 		self.N_WALLPICS = n_wallpics
-		self.makedir(self.ORIGINAL_IMAGE_DIR)
-		self.makedir(self.IMAGE_UPLOAD_DIR)
+		self.N_RANDOM_WALLPICS = 10
+		self.makedir(self.QUEUE_DIR)
+		self.makedir(self.RANDOM_DIR)
+		self.makedir(self.GRID_DIR)
+		# self.makedir(self.ORIGINAL_IMAGE_DIR)
+		# self.makedir(self.IMAGE_UPLOAD_DIR)
 
 	def __getitem__(self, item):
 		return getattr(self, item)
