@@ -26,6 +26,15 @@ def index():
 					namespace = '/test')
 
 	return render_template('wall.html')
+
+@flapp.route('/newwall')
+def newwall():
+	images = get_wall_images()
+	socketio.emit('images',
+					{'images':images},
+					namespace = '/test')
+
+	return render_template('wall2.html', cd = {(1,1): 'dog.jpg', (5,5):'animal.jpg'})
 	
 
 @flapp.route('/upload', methods = ['POST'])
