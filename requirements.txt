@@ -14,3 +14,4 @@ Pillow==2.4.0
 redis
 numpy
 scikit-image
+brewer2mpl

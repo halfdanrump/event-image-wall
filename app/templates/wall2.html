@@ -28,7 +28,7 @@
     <div class="row_grid">
       {% for column in range(10) %}
         {% if cd.has_key((row, column))%}
-          <div class="grid wh-100"><div class="hg wh-100"><a href="" class="attendant-100"></a></div></div>
+          <div class="grid wh-100"><div class="hg wh-100" style="background:url({{cd[(row,column)]}})"><a href="" class="test-100"></a></div></div>
         {% else %}
           <div class="grid wh-100"><div class="hg wh-100" id = "{{ (row, column) }}"> </div></div>
         {% endif %}

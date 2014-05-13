@@ -34,7 +34,7 @@ def newwall():
 					{'images':images},
 					namespace = '/test')
 
-	return render_template('wall2.html', cd = {(1,1): 'dog.jpg', (5,5):'animal.jpg'})
+	return render_template('wall2.html', cd = {(1,1): '/static/images/dog.jpg', (5,5):'/static/images/animal.jpg'})
 	
 
 @flapp.route('/upload', methods = ['POST'])
