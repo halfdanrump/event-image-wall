@@ -8,6 +8,7 @@ import time
 import argparse
 from app import rcon
 from app.views import add_image_to_wall_q
+from random import sample
 
 def random_image_daemon():
 	while True:
@@ -20,9 +21,14 @@ def random_image_daemon():
 		selected_images = sample(images, min(flapp.config['N_WALLPICS'], len(images)))
 		print images
 		
+		# socketio.emit('update wall pics',
+		# 			 {'images':selected_images},
+		# 			  namespace = '/test')
+		
 		socketio.emit('update wall pics',
-					 {'images':selected_images},
+					 {'images':selected_images, 'fade_out':'%s_%s'%(sample(range(8), 1)[0], sample(range(10), 1)[0])},
 					  namespace = '/test')
+
 		time.sleep(flapp.config['WALL_REFRESH_RATE'])
 
 if __name__ == "__main__":

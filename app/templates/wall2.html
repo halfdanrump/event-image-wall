@@ -20,18 +20,70 @@
   <!--[if lt IE 9]>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
+  <script type="text/javascript" charset="utf-8">
+    function arrange_images(msg) {
+        var contents = '';
+        for ( var i = 0; i < msg.images.length; i++ ) {
+          contents += '<img src="' + msg.images[i] + '"/>';
+        }
+        $('div#images').fadeOut(1000, function(){
+          $('div#images').html(contents);
+          $('.Collage').collagePlus({
+            'targetHeight'              : 400,
+            'direction'                 : 'vertical',
+            'allowPartialLastRow'       : false
+          });
+          $('div#images').fadeIn(1000);  
+        });
+      }
+    function fade_out_random(msg){
+
+    };
+
+    $(document).ready(function(){
+      var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+
+      // socket.emit('request images', function(msg){
+      //   // arrange_images(msg);
+      // });
+
+      // socket.on('images', function(msg){
+      //   arrange_images(msg);
+      // });
+
+      socket.on('update wall pics', function(msg){
+        console.log('Got message!');
+        console.log(msg.fade_out);
+        var element = $('div#' + msg.fade_out)
+        var bgelement = $('div#bg' + msg.fade_out)
+        // bgelement.css('visibility', 'false');
+        // bgelement.fadeOut(1000, function(){
+        //   // element.fadeIn(100);
+        // });
+        bgelement.animate({opacity: "0.0"}, 1000, function(){
+          element.css('background-image', 'url(' +  msg.images[0]+ ')');
+          bgelement.animate({opacity: "1.0"}, 1000);
+        });
+
+        
+        // test(msg);
+      });
+    });
+    
+  </script>
 </head>
 
 <body>
-<div style="width:1200px; margin:0 auto 0 auto;">
-  {% for row in range(8) %}
+<div style="width:1600px; margin:0 auto 0 auto;">
+  {% for row in range(100) %}
     <div class="row_grid">
       {% for column in range(10) %}
-        {% if cd.has_key((row, column))%}
-          <div class="grid wh-100"><div class="hg wh-100" style="background:url({{cd[(row,column)]}})"><a href="" class="test-100"></a></div></div>
+      <div class="grid wh-200" style="visibility:true" id="{{'bg%s_%s'%(row, column)}}"><div class="hg wh-200 attendant-200" id="{{'%s_%s'%(row, column)}}" style=""> </div></div>
+        <!-- {% if cd.has_key((row, column))%}
+          <div class="grid wh-100" id="{{'%s_%s'%(row, column)}}"><div  class="hg wh-100" style="background-image:url({{cd[(row,column)]}})"><a href="" class="test-100"></a></div></div>
         {% else %}
-          <div class="grid wh-100"><div class="hg wh-100" id = "{{ (row, column) }}"> </div></div>
-        {% endif %}
+          
+        {% endif %} -->
       {% endfor %}
 
     </div>

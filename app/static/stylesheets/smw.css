@@ -4,6 +4,7 @@
 a * {border: 0;} 
 
 /*       GRID       */
+.wh-200 {width:200px; height:200px;}
 .wh-100 {width:100px; height:100px;}
 .wh-50 {width:50px; height:50px;}
 .grid {margin:10px; position:relative; float:left;}
@@ -34,7 +35,7 @@ a * {border: 0;}
 .video_margin {margin:20px;}
 
 .animation_1 {
-	background:url(../images/click_here.png) no-repeat; width:100px; height:100px;
+	background:url(../images/click_here.png) no-repeat; width:200px; height:200px;
 			background-position: 0px 0px;
 	 		-webkit-animation: animation_1 2.4s steps(26) infinite alternate;
 			   -moz-animation: animation_1 2.4s steps(26) infinite alternate;
@@ -120,12 +121,12 @@ a * {border: 0;}
 /*       SOCIAL MEDIA ICONS 100 x 100      */
 
 .attendant-100 {
-  width:100px; height:100px; background-position:0px 0px; display:block;
+  width:180px; height:180px; background-position:0px 0px; display:block;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
     -webkit-transition: all 0.3s ease-out;
     -moz-transition: all 0.3s ease-out;
   -o-transition: all 0.3s ease-out;
    transition: all 0.3s ease-out;
 } 
-.attendant-100:hover {width:150px; height:150px; background-position:0px -150px;}
+/*.attendant-100:hover {width:150px; height:150px; background-position:0px -150px;}*/
 
