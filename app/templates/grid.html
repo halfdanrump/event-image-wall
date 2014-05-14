@@ -40,6 +40,8 @@
 
 
       socket.on('update wall pics', function(msg){
+        console.log(msg.images);
+        console.log(msg.cell);
         place_image(msg);
       });
     });

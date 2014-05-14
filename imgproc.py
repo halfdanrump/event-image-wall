@@ -24,6 +24,8 @@ import logging, logging.handlers
 logging.basicConfig(format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger('IMGPROC')
 logger.setLevel('DEBUG')
+import brewer2mpl
+
 # handler = logging.handlers.RotatingFileHandler('imgproc.log', maxBytes = 10**6)
 # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 # handler.setFormatter(formatter)
@@ -34,8 +36,12 @@ class Config(object):
 	RANDOM_NVERSIONS = 3
 	GRID_IMAGE_SIZE = (200, 200)
 	QUEUE_IMAGE_SIZE = (400, 400)
+	COLORMAP = brewer2mpl.get_map('RdYlGn', 'Diverging', 11)
 
-
+	def random_color(self):
+		hex_colors = [c.replace('#','') for c in self.COLORMAP.hex_colors]
+		color = sample(hex_colors, 1)[0]
+		return color
 
 def move_image(image_name):
 	source_name = joinpath(args.image_folder, image_name)
@@ -99,11 +105,12 @@ def queue_processing(image):
 
 
 def grid_processing(image):
-	width, height = config.GRID_IMAGE_SIZE	
-	image = ip.pipeline(image, ie.crop, ie.apply_circle_mask, [ie.resize_to_size, width, height])
-	image_path = save_image(image)
-	url = URL_BASE + '/upload_grid_image'
-	upload_image(image_path, url)
+	width, height = config.GRID_IMAGE_SIZE
+	for i in range(config.GRID_NVERSION):	
+		processed_image = ip.monochrome(image, width, height, config.random_color(), 100)
+		image_path = save_image(processed_image)
+		url = URL_BASE + '/upload_grid_image'
+		upload_image(image_path, url)
 
 def random_processing():
 	pass
