@@ -67,7 +67,7 @@ def handle_queue_image():
 	store_pic(new_image_path, request)
 	add_image_to_wall_q(new_image_path)
 	images = map(lambda x: '/'.join(x.split('/')[1::]), get_queue_wall_images())
-	socketio.emit('images', {'images':images, 'cell':get_random_cell()}, namespace = '/test')	
+	socketio.emit('images', {'images':images, 'cell':get_random_cell()}, namespace = '/queue')	
 	return render_template('queue.html')
 
 

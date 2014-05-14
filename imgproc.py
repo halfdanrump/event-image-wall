@@ -29,29 +29,12 @@ logger.setLevel('DEBUG')
 # handler.setFormatter(formatter)
 # logger.addHandler(handler)
 
-def image_processing_daemon():
-	logger.info('####################################################')
-	logger.info('Scanning folder %s for new pictures'%args.image_folder)
-	start_time = datetime.now()
-	processed_images = set()
-	while True:
-		try:
-			new_images = map(lambda ftype: glob(joinpath(image_dir, ftype)), ['*.jpg', '*.JPG'])
-			new_images = set([f.split('/')[-1] for sublist in new_images for f in sublist])
-			if new_images:
-				process_images(new_images)
-				processed_images = processed_images.union(new_images)
-		except KeyboardInterrupt:
-			raise
-		time.sleep(1)
+class Config(object):
+	GRID_NVERSION = 3
+	RANDOM_NVERSIONS = 3
+	GRID_IMAGE_SIZE = (200, 200)
+	QUEUE_IMAGE_SIZE = (400, 400)
 
-def process_images(images_to_process):
-	for image_name in images_to_process:
-		image_source_dir = image_dir
-		new_image_path = image_source_dir + image_name
-		logger.info('Processing image: %s'%image_name)
-		new_image_paths = resize_image(image_source_dir, image_name)
-		move_image(image_name)
 
 
 def move_image(image_name):
@@ -60,12 +43,77 @@ def move_image(image_name):
 	logger.info("Moving %s to %s"%(source_name, target_name))
 	shutil.move(source_name, target_name)
 
+def save_image(image):
+	new_image_path = joinpath(args.temp_folder, uuid.uuid4().hex) + '.jpg'
+	logger.debug('Saving image to %s'%new_image_path)
+	image.save(new_image_path, quality = 100)
+	return new_image_path
+	
+
+
+def image_processing_daemon():
+	logger.info('####################################################')
+	logger.info('Scanning folder %s for new pictures'%args.image_folder)
+	# processed_images = set()
+	while True:
+		try:
+			new_images = map(lambda ftype: glob(joinpath(image_dir, ftype)), ['*.jpg', '*.JPG'])
+			new_images = set([f.split('/')[-1] for sublist in new_images for f in sublist])
+			if new_images:
+				process_images(new_images)
+				# processed_images = processed_images.union(new_images)
+		except KeyboardInterrupt:
+			raise
+		time.sleep(1)
+
+def process_images(images_to_process):
+	for image_name in images_to_process:
+		image_source_dir = image_dir
+		
+		try:
+			image = Image.open(image_source_dir + image_name)	
+		
+			if args.processing_type == 'queue':
+				queue_processing(image)
+			elif args.processing_type == 'random':
+				pass
+			elif args.processing_type == 'grid':
+				grid_processing(image)
+			elif args.processing_type == 'all':
+				pass
+		
+			move_image(image_name)
+		
+		except IOError, e:
+			logger.exception('EXCEPTION!!!!: %s'%e)
+
+
+
+
+def queue_processing(image):
+	width, height = config.QUEUE_IMAGE_SIZE	
+	image = ip.pipeline(image, ie.crop, ie.apply_circle_mask, [ie.resize_to_size, width, height])
+	image_path = save_image(image)
+	url = URL_BASE + '/upload_queue_image'
+	upload_image(image_path, url)
+
+
+def grid_processing(image):
+	width, height = config.GRID_IMAGE_SIZE	
+	image = ip.pipeline(image, ie.crop, ie.apply_circle_mask, [ie.resize_to_size, width, height])
+	image_path = save_image(image)
+	url = URL_BASE + '/upload_grid_image'
+	upload_image(image_path, url)
+
+def random_processing():
+	pass
+
 
 
 def resize_image(current_image_dir, image_name):
 	image = Image.open(current_image_dir + image_name)
 	# preprocessed_image = ie.pipeline(image, ie.crop, ie.apply_circle_mask, [ie.monochrome, 100])
-	for scaling in args.resize_ratios:
+	for i in args.resize_ratios:
 		try:
 			logger.info('Putting %s through processing pipeline'%image_name)
 
@@ -93,13 +141,13 @@ def resize_image(current_image_dir, image_name):
 
 
 
-def upload_image(image_path):
-	if args.behavior == 'queue':
-		url = '%s:%s/upload_queue_image'%(config.HOST, config.PORT)
-	elif args.behavior == 'random':
-		url = '%s:%s/upload_random_image'%(config.HOST, config.PORT)
-	elif args.behavior == '':
-		url = '%s:%s/upload_grid_image'%(config.HOST, config.PORT)
+def upload_image(image_path, url):
+	# if args.behavior == 'queue':
+	# 	# url = '%s:%s/upload_queue_image'%(config.HOST, config.PORT)
+	# elif args.behavior == 'random':
+	# 	url = '%s:%s/upload_random_image'%(config.HOST, config.PORT)
+	# elif args.behavior == '':
+	# 	url = '%s:%s/upload_grid_image'%(config.HOST, config.PORT)
 
 
 	logger.info('Uploading %s to %s'%(image_path, url))
@@ -115,30 +163,28 @@ def upload_image(image_path):
 	
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description = 'Run to upload images to server as they are placed in the image folder')
-	parser.add_argument('-p', '--production', help = 'Set production environment', action = "store_true")
+	parser.add_argument('-ud', '--upload-destination', choices = ('local', 'remote'))
 	parser.add_argument('-i', '--image-folder', help = 'Specify image folder to monitor for new images', required = True)
 	parser.add_argument('-u', '--untouched-folder', help = 'Specify where to move untouched images', required = True)
 	parser.add_argument('-t', '--temp-folder', help = 'Specify temp folder where processed images are stored', required = True)
-	parser.add_argument('-b', '--behavior', help = 'Specify how the images should be resized to fit with display style', choices = ('queue', 'random'))
-	parser.add_argument('-ip', '--image-processing', help = 'Specify how the images should be resized to fit with display style', choices = ('monochrome', 'bloodyface', 'sketch'))
+	parser.add_argument('-pt', '--processing-type', help = 'Specify how the images should be resized to fit with display style', choices = ('queue', 'random', 'grid', 'all'))
 	
 	args = parser.parse_args()
 
 	basedir = os.path.abspath(os.path.dirname(__file__))
 	image_dir = os.path.join(basedir, args.image_folder)
-	print image_dir
 	
-	if args.behavior == 'queue':
-		args.resize_ratios = [4]
-	elif args.behavior == 'random':
-		args.resize_ratios = [6,8,16, 23, 4]
+	# if args.behavior == 'queue':
+	# 	args.resize_ratios = [4]
+	# elif args.behavior == 'random':
+	# 	args.resize_ratios = [6,8,16, 23, 4]
+	config = Config()
 
-	if args.production:
-		from conf import Production
-		config = Production()
-	else:
-		from conf import Development
-		config = Development()
-		print config.HOST
+	if args.upload_destination == 'local':
+		URL_BASE = 'http://127.0.0.1:8080'
+	elif args.upload_destination == 'remote':
+		URL_BASE = 'http://107.170.251.142:80'
+			
+
 	image_processing_daemon()
 
