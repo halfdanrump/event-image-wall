@@ -1,0 +1,59 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>DG IMAGE WALL</title>
+  <meta name="description" content="Digital Garage event pictures">
+  <meta name="author" content="Halfdan Rump">
+
+  <!-- <link rel="stylesheet" href="css/styles.css?v=1.0"> 
+  // <script src="/static/javascript/jquery-2.1.0.min.js"></script>
+  -->
+  <script src="/static/javascript/jquery-2.1.0.min.js"></script>
+  <script src="/static/javascript/collageplus/jquery.collagePlus.min.js"></script>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="static/stylesheets/style.css">
+  <script type="text/javascript" charset="utf-8">
+    function arrange_images(msg) {
+        var contents = '';
+        for ( var i = 0; i < msg.images.length; i++ ) {
+          contents += '<img src="' + msg.images[i] + '"/>';
+        }
+        $('div#images').fadeOut(1000, function(){
+          $('div#images').html(contents);
+          $('.Collage').collagePlus({
+            'targetHeight'              : 400,
+            'direction'                 : 'vertical',
+            'allowPartialLastRow'       : false
+          });
+          $('div#images').fadeIn(1000);  
+        });
+      }
+
+    $(document).ready(function(){
+      var socket = io.connect('http://' + document.domain + ':' + location.port + '/queue');
+      console.log('Qeueue wall is ready!');
+      socket.emit('request images', function(msg){
+        // arrange_images(msg);
+      });
+
+      socket.on('images', function(msg){
+        console.log(msg.images);
+        arrange_images(msg);
+      });
+
+  	});
+  	
+  </script>
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+	<div class="Collage" id="images">{{ images }}</div>
+    
+</body>
+</html>
