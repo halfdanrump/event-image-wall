@@ -97,15 +97,14 @@ def send_images():
 def send_queue_images():
 	flapp.logger.debug('Got images request in namespace: queue')
 	images = map(lambda x: '/'.join(x.split('/')[1::]), get_queue_wall_images())
-	print images
-	socketio.emit('images',	{'images':images}, namespace = '/test')
+	socketio.emit('images',	{'images':images}, namespace = '/queue')
 
 
 @socketio.on('request images', namespace = '/random')
 def send_random_images():
 	flapp.logger.debug('Got images request in namespace: random')
-	images = map(lambda x: '/'.join(x.split('/')[1::]), get_queue_wall_images())
-	print images
-	socketio.emit('images',	{'images':images}, namespace = '/test')
+	# images = map(lambda x: '/'.join(x.split('/')[1::]), get_queue_wall_images())
+	# print images
+	# socketio.emit('images',	{'images':images}, namespace = '/test')
 
 
