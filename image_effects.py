@@ -12,26 +12,33 @@ def resize(image, constant_scale_factor = 0.25, scale_bound_low = 0.1, scale_bou
 	dim = list(image.size)
 	new_dim = tuple(map(lambda x: int(x * float(scaling)), dim))
 	logger.debug('Resizing image by factor %s from %s to %s'%(scaling, dim, new_dim))
-	return image.resize((200, 200), Image.ANTIALIAS)
+	return image.resize(new_dim, Image.ANTIALIAS)
+
 
 def funky_angel(image, l = 100, u = 200):
 	return Image.eval(image, lambda x: x if x > l and x < u else random.randint(0, 256))
 
+
 def sketch(image, gain = 2, mode_size = 5):
 	return ImageEnhance.Contrast(image.convert('L')).enhance(gain).filter(ImageFilter.ModeFilter(mode_size)).filter(ImageFilter.CONTOUR())
+
 
 def mode(image, size = 10):
 	return image.filter(ImageFilter.ModeFilter(size))
 
+
 def monochrome(image, threshold = 150):
 	return image.convert('L').point(lambda p: p > threshold and 256)
+
 
 def random_flip(image):
 	if random.random() > 1: image = image.transpose(Image.FLIP_LEFT_RIGHT)
 	return image
 
+
 def t(image):
 	return Image.eval(image, lambda x: x if x > 100 and x < 200 else 256)
+
 
 def crop(image):
 	w, h = image.size

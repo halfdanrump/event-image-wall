@@ -23,7 +23,7 @@ import image_pipelines as ip
 import logging, logging.handlers
 logging.basicConfig(format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger('IMGPROC')
-logger.setLevel('INFO')
+logger.setLevel('DEBUG')
 # handler = logging.handlers.RotatingFileHandler('imgproc.log', maxBytes = 10**6)
 # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 # handler.setFormatter(formatter)
@@ -96,9 +96,12 @@ def resize_image(current_image_dir, image_name):
 def upload_image(image_path):
 	if args.behavior == 'queue':
 		url = '%s:%s/upload_queue_image'%(config.HOST, config.PORT)
-	else:
-		url = '%s:%s/upload'%(config.HOST, config.PORT)
-		
+	elif args.behavior == 'random':
+		url = '%s:%s/upload_random_image'%(config.HOST, config.PORT)
+	elif args.behavior == '':
+		url = '%s:%s/upload_grid_image'%(config.HOST, config.PORT)
+
+
 	logger.info('Uploading %s to %s'%(image_path, url))
 	header = {'Content-Type': 'image/jpeg'}
 	with open(image_path) as f:

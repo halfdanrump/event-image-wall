@@ -9,91 +9,103 @@ from random import sample
 from app import rcon
 
 def get_queue_wall_images():
-	return rcon.lrange(flapp.config['REDIS_WALL_Q'], 0, flapp.config['N_WALLPICS'])
+	return rcon.lrange(flapp.config['REDIS_WALL_Q'], 0, flapp.config['N_QUEUE_WALLPICS'])
+
 
 def add_image_to_wall_q(new_image_path):
 	rcon.rpush(flapp.config['REDIS_WALL_Q'], new_image_path)
-	if rcon.llen(flapp.config['REDIS_WALL_Q']) < flapp.config['N_WALLPICS']:
+	if rcon.llen(flapp.config['REDIS_WALL_Q']) < flapp.config['N_QUEUE_WALLPICS']:
 		rcon.rpush(flapp.config['REDIS_ALL_Q'], new_image_path)
 	else:
 		rcon.rpush(flapp.config['REDIS_ALL_Q'], rcon.lpop(flapp.config['REDIS_WALL_Q']))
 
-def get_random_cell():
-	return '%s_%s'%(sample(range(4), 1)[0], sample(range(8), 1)[0])
 
 def store_pic(new_image_path, request):
 	f = open(new_image_path, 'w')
 	f.write(request.data)
 	f.close()
 
+
+################################
+### Handlers routes
+##################################
+
+
 @flapp.route('/queue')
 def queuewall():
+	previous_images = set(os.listdir(flapp.config['QUEUE_DIR']))
+	previous_images = map(lambda f: flapp.config['QUEUE_DIR'] + f, previous_images) 
+	for img in previous_images:
+		add_image_to_wall_q(img)
 	images = get_queue_wall_images()
-	socketio.emit('images',
-					{'images':images},
-					namespace = '/test')
-
+	print images
+	socketio.emit('images', {'images':images}, namespace = '/queue')
 	return render_template('queue.html')
 
-
-@flapp.route('/newwall')
-def newwall():
-	images = get_queue_wall_images()
-	socketio.emit('images',	{'images':images}, namespace = '/test')
-	return render_template('wall2.html')
-	
 
 @flapp.route('/random')
 def randomwall():
 	return render_template('random.html')
 
 
-@flapp.route('/upload', methods = ['POST'])
-def upload():
-	# save received image to /static/images
-	# emit event to client telling it to append images
-	new_image_path = pathjoin(flapp.config['IMAGE_UPLOAD_DIR'], uuid.uuid4().hex)
-
-	print 'Saving image to %s'%new_image_path
-	f = open(new_image_path, 'w')
-	f.write(request.data)
-	f.close()
-
-	if flapp.config['DISPLAY_MODE'] == 'queue':
-		add_image_to_wall_q(new_image_path)
-		images = map(lambda x: '/'.join(x.split('/')[1::]), get_queue_wall_images())
-		socketio.emit('images', {'images':images, 'cell':'%s_%s'%(sample(range(4), 1)[0], sample(range(8), 1)[0])}, namespace = '/test')
-	return render_template('wall.html')
+@flapp.route('/grid')
+def grid():
+	return render_template('grid.html')
 
 
+
+################################
+### Handlers for uploading images
+##################################
 
 @flapp.route('/upload_queue_image', methods = ['POST'])
-def upload_queue_image():
-	# save received image to /static/images
-	# emit event to client telling it to append images
+def handle_queue_image():
+	def get_random_cell():
+		return '%s_%s'%(sample(range(flapp.config['N_GRID_ROWS']), 1)[0], sample(range(flapp.config['N_GRID_COLUMNS']), 1)[0])
+
 	new_image_path = pathjoin(flapp.config['QUEUE_DIR'], uuid.uuid4().hex)
 	store_pic(new_image_path, request)
 	add_image_to_wall_q(new_image_path)
 	images = map(lambda x: '/'.join(x.split('/')[1::]), get_queue_wall_images())
 	socketio.emit('images', {'images':images, 'cell':get_random_cell()}, namespace = '/test')	
-	return render_template('wall.html')
+	return render_template('queue.html')
 
 
+@flapp.route('/upload_random_image', methods = ['POST'])
+def handle_random_image():
+	new_image_path = pathjoin(flapp.config['RANDOM_DIR'], uuid.uuid4().hex)
+	store_pic(new_image_path, request)
+	return render_template('random.html')
 
-@socketio.on('request images', namespace = '/test')
+
+@flapp.route('/upload_grid_image', methods = ['POST'])
+def handle_grid_image():
+	new_image_path = pathjoin(flapp.config['GRID_DIR'], uuid.uuid4().hex)
+	store_pic(new_image_path, request)
+	return render_template('grid.html')
+
+
+###################
+# Event handlers for when client requests images
+##################
+
+@socketio.on('request images', namespace = '/grid')
 def send_images():
+	flapp.logger.debug('Got images request in namespace: grid')
+
+@socketio.on('request images', namespace = '/queue')
+def send_queue_images():
+	flapp.logger.debug('Got images request in namespace: queue')
 	images = map(lambda x: '/'.join(x.split('/')[1::]), get_queue_wall_images())
 	print images
-	socketio.emit('images',
-				{'images':images},
-				namespace = '/test')
+	socketio.emit('images',	{'images':images}, namespace = '/test')
+
 
 @socketio.on('request images', namespace = '/random')
-def send_images():
+def send_random_images():
+	flapp.logger.debug('Got images request in namespace: random')
 	images = map(lambda x: '/'.join(x.split('/')[1::]), get_queue_wall_images())
 	print images
-	socketio.emit('images',
-				{'images':images},
-				namespace = '/test')
+	socketio.emit('images',	{'images':images}, namespace = '/test')
 
 
