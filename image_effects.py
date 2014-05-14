@@ -15,8 +15,15 @@ def resize(image, constant_scale_factor = 0.25, scale_bound_low = 0.1, scale_bou
 	return image.resize(new_dim, Image.ANTIALIAS)
 
 def resize_to_size(image, width, height):
+	logger.debug('Resizing image by factor from %s to %s'%(image.size, (width, height)))
 	return image.resize((width, height), Image.ANTIALIAS)
 
+def random_resize(image, alpha, gamma):
+	scaling = np.random.beta(2, 5) * 0.5
+	w, h = image.size
+	w *= scaling
+	h *= scaling
+	return image.resize((int(w), int(h)), Image.ANTIALIAS)
 
 def funky_angel(image, l = 100, u = 200):
 	return Image.eval(image, lambda x: x if x > l and x < u else random.randint(0, 256))

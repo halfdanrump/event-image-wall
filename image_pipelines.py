@@ -24,8 +24,8 @@ def bloodyface(image, darker_color = '3c5c47', brigther_color = 'b0e4e0'):
 def sketch(image, background_color = 'FFFFFF', gain = 2, mode_size = 5):
 	return pipeline(image, ie.crop, [ie.sketch, gain, mode_size], [ie.colorize, background_color], ie.apply_circle_mask)
 
-def monochrome(image, width, height, hex_color = 'FFFFFF', monochrome_treshold = 100):
-	return pipeline(image, ie.crop, [ie.monochrome, monochrome_treshold], [ie.colorize, hex_color], ie.apply_circle_mask, [ie.resize_to_size, width, height])
+def monochrome(image, hex_color = 'FFFFFF', monochrome_treshold = 100):
+	return pipeline(image, ie.crop, [ie.monochrome, monochrome_treshold], [ie.colorize, hex_color], ie.apply_circle_mask)
 
 def funky_angel(image):
 	return pipeline(image, ie.crop, [ie.funky_angel, 50, 200], [ie.mode, 55], ie.apply_circle_mask)

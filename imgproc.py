@@ -33,10 +33,14 @@ import brewer2mpl
 
 class Config(object):
 	GRID_NVERSION = 3
-	RANDOM_NVERSIONS = 3
+	RANDOM_NVERSIONS = 10
 	GRID_IMAGE_SIZE = (200, 200)
 	QUEUE_IMAGE_SIZE = (400, 400)
 	COLORMAP = brewer2mpl.get_map('RdYlGn', 'Diverging', 11)
+
+	RANDOM_SCALING_ALPHA = 2
+	RANDOM_SCALING_GAMMA = 5
+	RANDON_SCALING_MAX = 0.5
 
 	def random_color(self):
 		hex_colors = [c.replace('#','') for c in self.COLORMAP.hex_colors]
@@ -60,17 +64,17 @@ def save_image(image):
 def image_processing_daemon():
 	logger.info('####################################################')
 	logger.info('Scanning folder %s for new pictures'%args.image_folder)
-	# processed_images = set()
 	while True:
 		try:
 			new_images = map(lambda ftype: glob(joinpath(image_dir, ftype)), ['*.jpg', '*.JPG'])
 			new_images = set([f.split('/')[-1] for sublist in new_images for f in sublist])
 			if new_images:
 				process_images(new_images)
-				# processed_images = processed_images.union(new_images)
 		except KeyboardInterrupt:
 			raise
 		time.sleep(1)
+
+
 
 def process_images(images_to_process):
 	for image_name in images_to_process:
@@ -82,11 +86,13 @@ def process_images(images_to_process):
 			if args.processing_type == 'queue':
 				queue_processing(image)
 			elif args.processing_type == 'random':
-				pass
+				random_processing(image)
 			elif args.processing_type == 'grid':
 				grid_processing(image)
 			elif args.processing_type == 'all':
-				pass
+				queue_processing(image)
+				grid_processing(image)
+				random_processing(image)
 		
 			move_image(image_name)
 		
@@ -107,56 +113,33 @@ def queue_processing(image):
 def grid_processing(image):
 	width, height = config.GRID_IMAGE_SIZE
 	for i in range(config.GRID_NVERSION):	
-		processed_image = ip.monochrome(image, width, height, config.random_color(), 100)
+		processed_image = ip.monochrome(image, config.random_color(), 100)
+		processed_image = ie.resize_to_size(processed_image, width, height)
 		image_path = save_image(processed_image)
 		url = URL_BASE + '/upload_grid_image'
 		upload_image(image_path, url)
 
-def random_processing():
-	pass
+def random_processing(image):
+	for i in range(config.RANDOM_NVERSIONS):
+		r = random.randint(0, 2)
+		print r
+		if r == 0:
+			processed_image = ip.monochrome(image, config.random_color(), int(random.gauss(100, 30)))
+		if r == 1:
+			processed_image = ip.bloodyface(image)
+		if r == 2:
+			gain = abs(random.gauss(2, 1))
+			mode_size = sample(range(3, 33, 2), 1)[0]
+			processed_image = ip.sketch(image, gain = gain, mode_size = mode_size)
+		processed_image = ie.random_resize(processed_image, config.RANDOM_SCALING_ALPHA, config.RANDOM_SCALING_GAMMA)
 
-
-
-def resize_image(current_image_dir, image_name):
-	image = Image.open(current_image_dir + image_name)
-	# preprocessed_image = ie.pipeline(image, ie.crop, ie.apply_circle_mask, [ie.monochrome, 100])
-	for i in args.resize_ratios:
-		try:
-			logger.info('Putting %s through processing pipeline'%image_name)
-
-			if args.image_processing == 'monochrome':
-				processed_image = ip.use_brewer_background(image, ip.monochrome)
-			elif args.image_processing == 'bloodyface':
-				processed_image = ip.bloodyface(image)
-			elif args.image_processing == 'sketch':
-				processed_image = ip.use_brewer_background(image, ip.sketch, gain = 2, mode_size = 11)
-			else:
-				processed_image = image
-			
-			if args.behavior == 'random':
-				processed_image = ip.random_scale_and_flip(processed_image)
-			elif args.behavior == 'queue':
-				processed_image = ip.constant_scale(processed_image)
-			
-	
-			new_image_path = joinpath(args.temp_folder, uuid.uuid4().hex + image_name)
-			processed_image.save(new_image_path, quality = 100)
-			upload_image(new_image_path)
-		
-		except Exception, e:
-			logger.exception(e)
+		image_path = save_image(processed_image)
+		url = URL_BASE + '/upload_random_image'
+		upload_image(image_path, url)			
 
 
 
 def upload_image(image_path, url):
-	# if args.behavior == 'queue':
-	# 	# url = '%s:%s/upload_queue_image'%(config.HOST, config.PORT)
-	# elif args.behavior == 'random':
-	# 	url = '%s:%s/upload_random_image'%(config.HOST, config.PORT)
-	# elif args.behavior == '':
-	# 	url = '%s:%s/upload_grid_image'%(config.HOST, config.PORT)
-
-
 	logger.info('Uploading %s to %s'%(image_path, url))
 	header = {'Content-Type': 'image/jpeg'}
 	with open(image_path) as f:
