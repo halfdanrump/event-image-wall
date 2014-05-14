@@ -153,7 +153,7 @@ def upload_image(image_path, url):
 	
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description = 'Run to upload images to server as they are placed in the image folder')
-	parser.add_argument('-ud', '--upload-destination', choices = ('local', 'remote'))
+	parser.add_argument('-ud', '--upload-destination', choices = ('local', 'remote'), required = True)
 	parser.add_argument('-i', '--image-folder', help = 'Specify image folder to monitor for new images', required = True)
 	parser.add_argument('-u', '--untouched-folder', help = 'Specify where to move untouched images', required = True)
 	parser.add_argument('-t', '--temp-folder', help = 'Specify temp folder where processed images are stored', required = True)
