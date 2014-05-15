@@ -119,13 +119,21 @@ def grid_processing(image):
 			gain = abs(random.gauss(2, 1))
 			mode_size = sample(range(3, 33, 2), 1)[0]
 			processed_image = ip.sketch(image, gain = gain, mode_size = mode_size)	
+			processed_image = ie.resize_to_size(processed_image, width, height)
+			image_path = save_image(processed_image)
+			upload_image(image_path, URL_BASE + '/upload_grid_image')
 		elif args.grid_processing == 'monochrome':
-			processed_image = ip.monochrome(image, config.random_color(), 110)
-		
-		processed_image = ie.resize_to_size(processed_image, width, height)
-		image_path = save_image(processed_image)
-		url = URL_BASE + '/upload_grid_image'
-		upload_image(image_path, url)
+			processed_image_white = ip.monochrome(image, config.random_color(), 110)
+			processed_image_white = ie.resize_to_size(processed_image_white, width, height)
+			image_path_white = save_image(processed_image_white)
+			upload_image(image_path_white, URL_BASE + '/upload_grid_image_white')
+
+			processed_image_black = ip.monochrome(image, config.random_color(), 110, white_background = False)
+			processed_image_black = ie.resize_to_size(processed_image_black, width, height)
+			image_path_black = save_image(processed_image_black)
+			upload_image(image_path_black, URL_BASE + '/upload_grid_image_black')
+			
+
 
 def random_processing(image):
 	for i in range(config.RANDOM_NVERSIONS):

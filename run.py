@@ -31,9 +31,11 @@ def random_image_daemon():
 
 def grid_image_daemon():
 	while True:
-		images = scan_image_folder(flapp.config['GRID_DIR'])
-		selected_images = sample(images, min(1, len(images))) 
-		socketio.emit('update wall pics', {'images':selected_images, 'cell':'%s_%s'%(sample(range(4), 1)[0], sample(range(8), 1)[0])}, namespace = '/grid')
+		images_white = scan_image_folder(flapp.config['GRID_DIR_WHITE'])
+		selected_images_white = sample(images_white, min(1, len(images_white))) 
+		images_black = scan_image_folder(flapp.config['GRID_DIR_BLACK'])
+		selected_images_black = sample(images_black, min(1, len(images_black))) 
+		socketio.emit('update wall pics', {'images_white':selected_images_white, 'images_black':selected_images_black, 'cell':'%s_%s'%(sample(range(4), 1)[0], sample(range(8), 1)[0])}, namespace = '/grid')
 		time.sleep(flapp.config['GRID_REFRESH_RATE'])
 
 

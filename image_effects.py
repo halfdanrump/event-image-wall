@@ -75,20 +75,21 @@ def get_mask(image, bgcolor = 0, circle_color = 255, mode = 'L'):
 
 
 def get_circle(image, bgcolor = 0, circle_color = 255, mode = 'L'):
-	mask = Image.new(mode, image.size, 0)
-	draw = ImageDraw.Draw(mask) 
-	draw.ellipse((0, 0) + image.size, fill=255)
+	mask = Image.new(mode, image.size, 255)
+	draw = ImageDraw.Draw(mask)
+	draw.ellipse((0, 0) + image.size, fill=0)
 	return mask
 
 
 def apply_circle_mask(cropped):
 	circle = get_circle(cropped)
 	cropped.paste(circle, mask = circle)
-	return image
+	return cropped
 
 def apply_circle_mask_black(cropped):
-	background = get_circle(cropped, mode = 'RGB', circle_color=(255,255,255))
-	mask = get_circle(cropped)
+	background = get_mask(cropped, mode = 'RGB', circle_color=(255,255,255))
+	
+	mask = get_mask(cropped)
 	background.paste(cropped, mask = mask)
 	return background
 

@@ -48,9 +48,13 @@ def randomwall():
 	return render_template('random.html')
 
 
-@flapp.route('/grid')
-def grid():
-	return render_template('grid.html', n_rows = 3, n_columns = 5, image_size = 350)
+@flapp.route('/grid_white')
+def grid_white():
+	return render_template('grid_white.html', n_rows = 3, n_columns = 5, image_size = 350)
+
+@flapp.route('/grid_black')
+def grid_black():
+	return render_template('grid_black.html', n_rows = 3, n_columns = 5, image_size = 350)
 
 
 
@@ -78,12 +82,17 @@ def handle_random_image():
 	return render_template('random.html')
 
 
-@flapp.route('/upload_grid_image', methods = ['POST'])
-def handle_grid_image():
-	new_image_path = pathjoin(flapp.config['GRID_DIR'], uuid.uuid4().hex)
+@flapp.route('/upload_grid_image_white', methods = ['POST'])
+def handle_grid_image_white():
+	new_image_path = pathjoin(flapp.config['GRID_DIR_WHITE'], uuid.uuid4().hex)
 	store_pic(new_image_path, request)
-	return render_template('grid.html')
+	return render_template('dummy.html')
 
+@flapp.route('/upload_grid_image_black', methods = ['POST'])
+def handle_grid_image_black():
+	new_image_path = pathjoin(flapp.config['GRID_DIR_BLACK'], uuid.uuid4().hex)
+	store_pic(new_image_path, request)
+	return render_template('dummy.html')
 
 ###################
 # Event handlers for when client requests images

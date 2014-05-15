@@ -22,10 +22,12 @@ class BasicConfig():
 		
 		self.QUEUE_DIR = 'app/static/images/uploaded/queue/'
 		self.RANDOM_DIR = 'app/static/images/uploaded/random/'
-		self.GRID_DIR = 'app/static/images/uploaded/grid/'
+		self.GRID_DIR_WHITE = 'app/static/images/uploaded/grid_white/'
+		self.GRID_DIR_BLACK = 'app/static/images/uploaded/grid_black/'
 		self.makedir(self.QUEUE_DIR)
 		self.makedir(self.RANDOM_DIR)
-		self.makedir(self.GRID_DIR)
+		self.makedir(self.GRID_DIR_WHITE)
+		self.makedir(self.GRID_DIR_BLACK)
 
 
 		self.RANDOM_REFRESH_RATE = 8
