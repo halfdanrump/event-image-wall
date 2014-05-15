@@ -25,9 +25,9 @@
     function place_image(msg){
       var element = $('div#' + msg.cell)
       var bgelement = $('div#bg' + msg.cell)
-      bgelement.animate({opacity: "0.0"}, 2000, function(){
+      bgelement.animate({opacity: "0.0"}, 1450, function(){
         element.css('background-image', 'url(' +  msg.images[0]+ ')');
-        bgelement.animate({opacity: "1.0"}, 2000);
+        bgelement.animate({opacity: "1.0"}, 1450);
       });
     };   
 
@@ -47,19 +47,25 @@
     });
     
   </script>
+  <!-- <div class="grid wh-200" style="visibility:true" id="{{'bg%s_%s'%(row, column)}}"><div class="hg wh-200 attendant-200" id="{{'%s_%s'%(row, column)}}" style=""> </div></div> -->
+      <!-- <div class="grid wh-350" style="visibility:true" id="{{'bg%s_%s'%(row, column)}}"><div class="wh-350 attendant-350" id="{{'%s_%s'%(row, column)}}" style=""> </div></div> -->
 </head>
 
-<body>
-<div style="width:1800px; margin:0 auto 0 auto;">
-  {% for row in range(4) %}
+<body style="background-color:#000000">
+<!-- <body style="background-color:#FFFFFF"> -->
+<div style="width:1900px; height:150px; margin:0 auto 0 auto; align:center;"></div>
+<div style="width:1900px; margin:0 auto 0 auto; align:center;" >
+  {% for row in range(n_rows) %}
     <div class="row_grid">
-      {% for column in range(8) %}
-      <div class="grid wh-200" style="visibility:true" id="{{'bg%s_%s'%(row, column)}}"><div class="wh-200 attendant-200" id="{{'%s_%s'%(row, column)}}" style=""> </div></div>
+      {% for column in range(n_columns) %}
+      <div class="grid wh-{{image_size}}" style="visibility:true" id="{{'bg%s_%s'%(row, column)}}">
+        <div class="wh-{{image_size}} attendant-{{image_size}}" id="{{'%s_%s'%(row, column)}}" style=""> </div>
+      </div>
       {% endfor %}
 
     </div>
   {% endfor %}
 </div>
-    
+
 </body>
 </html>

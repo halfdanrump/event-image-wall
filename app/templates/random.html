@@ -21,14 +21,14 @@
         for ( var i = 0; i < msg.images.length; i++ ) {
           contents += '<img src="' + msg.images[i] + '"/>';
         }
-        $('div#images').fadeOut(1000, function(){
+        $('div#images').fadeOut(2000, function(){
           $('div#images').html(contents);
           $('.Collage').collagePlus({
             'targetHeight'              : 400,
             'direction'                 : 'vertical',
             'allowPartialLastRow'       : false
           });
-          $('div#images').fadeIn(1000);  
+          $('div#images').fadeIn(2000);  
         });
       }
 

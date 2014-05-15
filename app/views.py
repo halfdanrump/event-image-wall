@@ -50,7 +50,7 @@ def randomwall():
 
 @flapp.route('/grid')
 def grid():
-	return render_template('grid.html')
+	return render_template('grid.html', n_rows = 3, n_columns = 5, image_size = 350)
 
 
 

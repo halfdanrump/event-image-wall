@@ -32,10 +32,11 @@ import brewer2mpl
 # logger.addHandler(handler)
 
 class Config(object):
-	GRID_NVERSION = 3
+	GRID_NVERSION = 5
 	RANDOM_NVERSIONS = 10
-	GRID_IMAGE_SIZE = (200, 200)
-	QUEUE_IMAGE_SIZE = (400, 400)
+	GRID_IMAGE_SIZE = (350, 350)
+	# GRID_IMAGE_SIZE = (200, 200)
+	QUEUE_IMAGE_SIZE = (350, 350)
 	COLORMAP = brewer2mpl.get_map('RdYlGn', 'Diverging', 11)
 
 	RANDOM_SCALING_ALPHA = 2
@@ -85,6 +86,7 @@ def process_images(images_to_process):
 		
 			if args.processing_type == 'queue':
 				queue_processing(image)
+				grid_processing(image)
 			elif args.processing_type == 'random':
 				random_processing(image)
 			elif args.processing_type == 'grid':
@@ -113,7 +115,13 @@ def queue_processing(image):
 def grid_processing(image):
 	width, height = config.GRID_IMAGE_SIZE
 	for i in range(config.GRID_NVERSION):	
-		processed_image = ip.monochrome(image, config.random_color(), 100)
+		if args.grid_processing == 'sketch':
+			gain = abs(random.gauss(2, 1))
+			mode_size = sample(range(3, 33, 2), 1)[0]
+			processed_image = ip.sketch(image, gain = gain, mode_size = mode_size)	
+		elif args.grid_processing == 'monochrome':
+			processed_image = ip.monochrome(image, config.random_color(), 110)
+		
 		processed_image = ie.resize_to_size(processed_image, width, height)
 		image_path = save_image(processed_image)
 		url = URL_BASE + '/upload_grid_image'
@@ -124,7 +132,8 @@ def random_processing(image):
 		r = random.randint(0, 2)
 		print r
 		if r == 0:
-			processed_image = ip.monochrome(image, config.random_color(), int(random.gauss(100, 30)))
+			processed_image = ip.monochrome(image, config.random_color(), 100)
+			# processed_image = ip.monochrome(image, config.random_color(), int(random.gauss(100, 30)))
 		if r == 1:
 			processed_image = ip.bloodyface(image)
 		if r == 2:
@@ -158,23 +167,18 @@ if __name__ == "__main__":
 	parser.add_argument('-u', '--untouched-folder', help = 'Specify where to move untouched images', required = True)
 	parser.add_argument('-t', '--temp-folder', help = 'Specify temp folder where processed images are stored', required = True)
 	parser.add_argument('-pt', '--processing-type', help = 'Specify how the images should be resized to fit with display style', choices = ('queue', 'random', 'grid', 'all'))
+	parser.add_argument('-gp', '--grid-processing', choices = ('monochrome', 'sketch'))
 	
 	args = parser.parse_args()
-
 	basedir = os.path.abspath(os.path.dirname(__file__))
 	image_dir = os.path.join(basedir, args.image_folder)
-	
-	# if args.behavior == 'queue':
-	# 	args.resize_ratios = [4]
-	# elif args.behavior == 'random':
-	# 	args.resize_ratios = [6,8,16, 23, 4]
+		
 	config = Config()
 
 	if args.upload_destination == 'local':
 		URL_BASE = 'http://127.0.0.1:8080'
 	elif args.upload_destination == 'remote':
-		URL_BASE = 'http://107.170.251.142:80'
-			
+		URL_BASE = 'http://107.170.251.142:80'	
 
 	image_processing_daemon()
 

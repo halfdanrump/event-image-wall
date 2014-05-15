@@ -26,7 +26,7 @@ def random_image_daemon():
 		images = scan_image_folder(flapp.config['RANDOM_DIR'])
 		selected_images = sample(images, min(flapp.config['N_RANDOM_WALLPICS'], len(images))) 
 		socketio.emit('update wall pics', {'images':selected_images}, namespace = '/random')
-		time.sleep(flapp.config['WALL_REFRESH_RATE'])
+		time.sleep(flapp.config['RANDOM_REFRESH_RATE'])
 
 
 def grid_image_daemon():
@@ -34,21 +34,20 @@ def grid_image_daemon():
 		images = scan_image_folder(flapp.config['GRID_DIR'])
 		selected_images = sample(images, min(1, len(images))) 
 		socketio.emit('update wall pics', {'images':selected_images, 'cell':'%s_%s'%(sample(range(4), 1)[0], sample(range(8), 1)[0])}, namespace = '/grid')
-		time.sleep(flapp.config['WALL_REFRESH_RATE'])
+		time.sleep(flapp.config['GRID_REFRESH_RATE'])
 
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description = 'Run as main to start the Event Image Wall app server')
 	parser.add_argument('-p', '--production', help = 'Set production environment', action = "store_true")
 	parser.add_argument('--delete-old-images', action = "store_true")
-	parser.add_argument('-r', '--wall-refresh-rate', type = int, default = 5)
 	args = parser.parse_args()	
 
 	from app.conf import Production, Development
 	if args.production:
-		config = Production(wall_refresh_rate = args.wall_refresh_rate)
+		config = Production()
 	else:
-		config = Development(wall_refresh_rate = args.wall_refresh_rate)
+		config = Development()
 
 	flapp.config.from_object(config)
 

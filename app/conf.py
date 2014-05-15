@@ -16,7 +16,9 @@ class BasicConfig():
 		except OSError:
 			pass
 
-	def __init__(self, wall_refresh_rate):
+	# GRID_NROWS = {200: }
+
+	def __init__(self):
 		
 		self.QUEUE_DIR = 'app/static/images/uploaded/queue/'
 		self.RANDOM_DIR = 'app/static/images/uploaded/random/'
@@ -26,13 +28,14 @@ class BasicConfig():
 		self.makedir(self.GRID_DIR)
 
 
-		self.WALL_REFRESH_RATE = wall_refresh_rate
+		self.RANDOM_REFRESH_RATE = 8
+		self.GRID_REFRESH_RATE = 3
 
 		self.N_RANDOM_WALLPICS = 10
 		self.N_QUEUE_WALLPICS = 10
 		
-		self.N_GRID_ROWS = 4
-		self.N_GRID_COLUMNS = 8
+		self.N_GRID_ROWS = 7
+		self.N_GRID_COLUMNS = 10
 
 	def __getitem__(self, item):
 		return getattr(self, item)
