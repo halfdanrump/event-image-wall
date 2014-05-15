@@ -57,6 +57,11 @@ def grid_black():
 	return render_template('grid_black.html', n_rows = 3, n_columns = 5, image_size = 350)
 
 
+@flapp.route('/grid_crazy')
+def grid_crazy():
+	return render_template('grid_crazy.html', n_rows = 10, n_columns = 5, image_size = 350)
+
+
 
 ################################
 ### Handlers for uploading images

@@ -32,9 +32,10 @@ import brewer2mpl
 # logger.addHandler(handler)
 
 class Config(object):
-	GRID_NVERSION = 5
+	GRID_NVERSION = 1
 	RANDOM_NVERSIONS = 10
 	GRID_IMAGE_SIZE = (350, 350)
+	# GRID_IMAGE_SIZE = (1200,1200)
 	# GRID_IMAGE_SIZE = (200, 200)
 	QUEUE_IMAGE_SIZE = (350, 350)
 	COLORMAP = brewer2mpl.get_map('RdYlGn', 'Diverging', 11)
@@ -116,8 +117,10 @@ def grid_processing(image):
 	width, height = config.GRID_IMAGE_SIZE
 	for i in range(config.GRID_NVERSION):	
 		if args.grid_processing == 'sketch':
-			gain = abs(random.gauss(2, 1))
-			mode_size = sample(range(3, 33, 2), 1)[0]
+			# gain = abs(random.gauss(2, 1))
+			# mode_size = sample(range(3, 33, 2), 1)[0]
+			gain = 2
+			mode_size = 11
 			processed_image = ip.sketch(image, gain = gain, mode_size = mode_size)	
 			processed_image = ie.resize_to_size(processed_image, width, height)
 			image_path = save_image(processed_image)
