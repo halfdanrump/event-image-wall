@@ -107,6 +107,7 @@ def handle_grid_image_black():
 def send_images():
 	flapp.logger.debug('Got images request in namespace: grid')
 
+
 @socketio.on('request images', namespace = '/queue')
 def send_queue_images():
 	flapp.logger.debug('Got images request in namespace: queue')

@@ -49,11 +49,13 @@ class Config(object):
 		color = sample(hex_colors, 1)[0]
 		return color
 
+
 def move_image(image_name):
 	source_name = joinpath(args.image_folder, image_name)
 	target_name = joinpath(args.untouched_folder, image_name)
 	logger.info("Moving %s to %s"%(source_name, target_name))
 	shutil.move(source_name, target_name)
+
 
 def save_image(image):
 	new_image_path = joinpath(args.temp_folder, uuid.uuid4().hex) + '.jpg'
@@ -107,10 +109,14 @@ def process_images(images_to_process):
 
 def queue_processing(image):
 	width, height = config.QUEUE_IMAGE_SIZE	
-	image = ip.pipeline(image, ie.crop, ie.apply_circle_mask, [ie.resize_to_size, width, height])
-	image_path = save_image(image)
-	url = URL_BASE + '/upload_queue_image'
-	upload_image(image_path, url)
+	processed_image = ip.monochrome(image, config.random_color(), 110, white_background = False)
+	processed_image = ie.resize_to_size(processed_image, width, height)
+	image_path = save_image(processed_image)
+	upload_image(image_path, URL_BASE + '/upload_queue_image')
+	# image = ip.pipeline(image, ie.crop, ie.apply_circle_mask, [ie.resize_to_size, width, height])
+	# image_path = save_image(image)
+	# url = URL_BASE + '/upload_queue_image'
+	# upload_image(image_path, url)
 
 
 def grid_processing(image):
