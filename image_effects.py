@@ -60,23 +60,37 @@ def crop(image):
 	return image.crop(box)
 
 
-def get_mask(image, fill = 255):
-	bigsize = (image.size[0] * 1, image.size[1] * 1)
-	mask = Image.new('RGBA', bigsize, 0)
+# def get_mask(image, fill = 255):
+# 	bigsize = (image.size[0] * 1, image.size[1] * 1)
+# 	mask = Image.new('RGBA', bigsize, 0)
+# 	draw = ImageDraw.Draw(mask) 
+# 	draw.ellipse((0, 0) + bigsize, fill=fill)
+# 	return mask
+
+def get_mask(image, bgcolor = 0, circle_color = 255, mode = 'L'):
+	mask = Image.new(mode, image.size, 0)
 	draw = ImageDraw.Draw(mask) 
-	draw.ellipse((0, 0) + bigsize, fill=fill)
+	draw.ellipse((0, 0) + image.size, fill=255)
 	return mask
 
-def get_circle(image):
-	mask = Image.new('L', image.size, 255)
+
+def get_circle(image, bgcolor = 0, circle_color = 255, mode = 'L'):
+	mask = Image.new(mode, image.size, 0)
 	draw = ImageDraw.Draw(mask) 
-	draw.ellipse((0, 0) + image.size, fill=0)
+	draw.ellipse((0, 0) + image.size, fill=255)
 	return mask
 
-def apply_circle_mask(image):
-	circle = get_circle(image)
-	image.paste(circle, mask = circle)
+
+def apply_circle_mask(cropped):
+	circle = get_circle(cropped)
+	cropped.paste(circle, mask = circle)
 	return image
+
+def apply_circle_mask_black(cropped):
+	background = get_circle(cropped, mode = 'RGB', circle_color=(255,255,255))
+	mask = get_circle(cropped)
+	background.paste(cropped, mask = mask)
+	return background
 
 def colorize(image, hex_color):
 	rgb_tuple = hex2rgb(hex_color)
