@@ -53,6 +53,10 @@ def randomwall():
 def grid_white():
 	return render_template('grid_white.html', n_rows = 3, n_columns = 5, image_size = 350)
 
+@flapp.route('/grid_sketch')
+def grid_sketch():
+	return render_template('grid_sketch.html', n_rows = 3, n_columns = 5, image_size = 350)
+
 @flapp.route('/grid_black')
 def grid_black():
 	return render_template('grid_black.html', n_rows = 3, n_columns = 5, image_size = 350)
@@ -97,6 +101,12 @@ def handle_grid_image_white():
 @flapp.route('/upload_grid_image_black', methods = ['POST'])
 def handle_grid_image_black():
 	new_image_path = pathjoin(flapp.config['GRID_DIR_BLACK'], uuid.uuid4().hex)
+	store_pic(new_image_path, request)
+	return render_template('dummy.html')
+
+@flapp.route('/upload_grid_image_sketch', methods = ['POST'])
+def handle_grid_image_sketch():
+	new_image_path = pathjoin(flapp.config['GRID_DIR_SKETCH'], uuid.uuid4().hex)
 	store_pic(new_image_path, request)
 	return render_template('dummy.html')
 

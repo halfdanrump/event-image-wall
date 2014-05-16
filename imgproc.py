@@ -130,7 +130,7 @@ def grid_processing(image):
 			processed_image = ip.sketch(image, gain = gain, mode_size = mode_size)	
 			processed_image = ie.resize_to_size(processed_image, width, height)
 			image_path = save_image(processed_image)
-			upload_image(image_path, URL_BASE + '/upload_grid_image')
+			upload_image(image_path, URL_BASE + '/upload_grid_image_sketch')
 		elif args.grid_processing == 'monochrome':
 			processed_image_white = ip.monochrome(image, config.random_color(), 110)
 			processed_image_white = ie.resize_to_size(processed_image_white, width, height)

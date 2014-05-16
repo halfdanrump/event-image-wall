@@ -1,0 +1,69 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>DG IMAGE WALL</title>
+  <meta name="description" content="Digital Garage event pictures">
+  <meta name="author" content="Halfdan Rump">
+
+  <!-- <link rel="stylesheet" href="css/styles.css?v=1.0"> 
+  // <script src="/static/javascript/jquery-2.1.0.min.js"></script>
+  -->
+  <script src="/static/javascript/jquery-2.1.0.min.js"></script>
+  
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="static/stylesheets/style.css">
+  <link rel="stylesheet" type="text/css" href="static/stylesheets/smw.css" />  
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <script type="text/javascript" charset="utf-8">
+    
+    function place_image(msg){
+      var element = $('div#' + msg.cell)
+      var bgelement = $('div#bg' + msg.cell)
+      bgelement.animate({opacity: "0.0"}, 1450, function(){
+        element.css('background-image', 'url(' +  msg.images_white[0]+ ')');
+        bgelement.animate({opacity: "1.0"}, 1450);
+      });
+    };   
+
+    $(document).ready(function(){
+      var socket = io.connect('http://' + document.domain + ':' + location.port + '/grid');
+
+      socket.emit('request images', function(msg){
+        console.log('Requested images');
+      });
+
+
+      socket.on('update wall pics', function(msg){
+        console.log(msg.images_white);
+        console.log(msg.cell);
+        place_image(msg);
+      });
+    });
+    
+  </script>
+</head>
+
+<body style="background-color:#FFFFFF">
+<!-- <body style="background-color:#FFFFFF"> -->
+<!-- <div style="width:1900px; height:150px; margin:0 auto 0 auto; align:center;"></div> -->
+<div style="width:1900px; margin:0 auto 0 auto; align:center;" >
+  {% for row in range(n_rows) %}
+    <div class="row_grid">
+      {% for column in range(n_columns) %}
+      <div class="grid wh-{{image_size}}" style="visibility:true" id="{{'bg%s_%s'%(row, column)}}">
+        <div class="wh-{{image_size}} attendant-{{image_size}}" id="{{'%s_%s'%(row, column)}}" style=""> </div>
+      </div>
+      {% endfor %}
+
+    </div>
+  {% endfor %}
+</div>
+
+</body>
+</html>
