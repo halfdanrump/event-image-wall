@@ -34,7 +34,7 @@ class BasicConfig():
 		self.GRID_REFRESH_RATE = 3
 
 		self.N_RANDOM_WALLPICS = 10
-		self.N_QUEUE_WALLPICS = 16
+		self.N_QUEUE_WALLPICS = 15
 		
 		self.N_GRID_ROWS = 7
 		self.N_GRID_COLUMNS = 10
