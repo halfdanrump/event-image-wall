@@ -9,11 +9,12 @@ from random import sample
 from app import rcon
 
 def get_queue_wall_images():
-	return rcon.lrange(flapp.config['REDIS_WALL_Q'], 0, flapp.config['N_QUEUE_WALLPICS'])
+	return rcon.lrange(flapp.config['REDIS_WALL_Q'], 0, flapp.config['N_QUEUE_WALLPICS'] + 1)
 
 
 def add_image_to_wall_q(new_image_path):
 	rcon.rpush(flapp.config['REDIS_WALL_Q'], new_image_path)
+	
 	if rcon.llen(flapp.config['REDIS_WALL_Q']) < flapp.config['N_QUEUE_WALLPICS']:
 		rcon.rpush(flapp.config['REDIS_ALL_Q'], new_image_path)
 	else:

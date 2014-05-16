@@ -37,7 +37,7 @@ class Config(object):
 	GRID_IMAGE_SIZE = (350, 350)
 	# GRID_IMAGE_SIZE = (1200,1200)
 	# GRID_IMAGE_SIZE = (200, 200)
-	QUEUE_IMAGE_SIZE = (350, 350)
+	QUEUE_IMAGE_SIZE = (340, 340)
 	COLORMAP = brewer2mpl.get_map('RdYlGn', 'Diverging', 11)
 
 	RANDOM_SCALING_ALPHA = 2
