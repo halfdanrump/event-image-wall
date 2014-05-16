@@ -125,7 +125,7 @@ def grid_processing(image):
 		if args.grid_processing == 'sketch':
 			# gain = abs(random.gauss(2, 1))
 			# mode_size = sample(range(3, 33, 2), 1)[0]
-			gain = 2
+			gain = 1
 			mode_size = 11
 			processed_image = ip.sketch(image, gain = gain, mode_size = mode_size)	
 			processed_image = ie.resize_to_size(processed_image, width, height)

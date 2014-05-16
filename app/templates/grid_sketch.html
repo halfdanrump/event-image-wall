@@ -26,7 +26,7 @@
       var element = $('div#' + msg.cell)
       var bgelement = $('div#bg' + msg.cell)
       bgelement.animate({opacity: "0.0"}, 1450, function(){
-        element.css('background-image', 'url(' +  msg.images_white[0]+ ')');
+        element.css('background-image', 'url(' +  msg.images_sketch[0]+ ')');
         bgelement.animate({opacity: "1.0"}, 1450);
       });
     };   
@@ -51,7 +51,7 @@
 
 <body style="background-color:#FFFFFF">
 <!-- <body style="background-color:#FFFFFF"> -->
-<!-- <div style="width:1900px; height:150px; margin:0 auto 0 auto; align:center;"></div> -->
+<div style="width:1900px; height:150px; margin:0 auto 0 auto; align:center;"></div>
 <div style="width:1900px; margin:0 auto 0 auto; align:center;" >
   {% for row in range(n_rows) %}
     <div class="row_grid">
