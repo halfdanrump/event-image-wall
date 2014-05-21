@@ -43,6 +43,15 @@ def queuewall():
 	socketio.emit('images', {'images':images}, namespace = '/queue')
 	return render_template('queue.html')
 
+import random
+@flapp.route('/static_wall')
+def static_wall():
+	images = set(os.listdir(flapp.config['QUEUE_DIR']))
+	images = map(lambda f: flapp.flaskify(flapp.config['QUEUE_DIR'] + f), images) 
+	images = random.sample(images, len(images))
+	print images
+	return render_template('static_wall.html', images = images)
+
 
 @flapp.route('/random')
 def randomwall():
@@ -98,17 +107,20 @@ def handle_grid_image_white():
 	store_pic(new_image_path, request)
 	return render_template('dummy.html')
 
+
 @flapp.route('/upload_grid_image_black', methods = ['POST'])
 def handle_grid_image_black():
 	new_image_path = pathjoin(flapp.config['GRID_DIR_BLACK'], uuid.uuid4().hex)
 	store_pic(new_image_path, request)
 	return render_template('dummy.html')
 
+
 @flapp.route('/upload_grid_image_sketch', methods = ['POST'])
 def handle_grid_image_sketch():
 	new_image_path = pathjoin(flapp.config['GRID_DIR_SKETCH'], uuid.uuid4().hex)
 	store_pic(new_image_path, request)
 	return render_template('dummy.html')
+
 
 ###################
 # Event handlers for when client requests images
