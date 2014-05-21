@@ -4,7 +4,7 @@
 a * {border: 0;} 
 
 /*       GRID       */
-.wh-350 {width:350px; height:350px; opacity:0.9;}
+.wh-350 {width:350px; height:350px; opacity:0.8;}
 .wh-175 {width:175px; height:175px;}
 .wh-200 {width:200px; height:200px;}
 .wh-100 {width:100px; height:100px;}
@@ -13,7 +13,6 @@ a * {border: 0;}
 .wh-350:hover{
   opacity:1;
 }
-
 img.centered {
     display: block;
     margin-left: auto;

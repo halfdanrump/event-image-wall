@@ -44,7 +44,7 @@ def queuewall():
 	return render_template('queue.html')
 
 import random
-@flapp.route('/static_wall')
+@flapp.route('/')
 def static_wall():
 	images = set(os.listdir(flapp.config['QUEUE_DIR']))
 	images = map(lambda f: flapp.flaskify(flapp.config['QUEUE_DIR'] + f), images) 
