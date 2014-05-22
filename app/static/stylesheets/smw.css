@@ -5,14 +5,16 @@ a * {border: 0;}
 
 /*       GRID       */
 .wh-350 {width:350px; height:350px; opacity:0.8;}
-.wh-175 {width:175px; height:175px;}
 .wh-200 {width:200px; height:200px;}
+.wh-175 {width:175px; height:175px;}
+.wh-150 {width:150px; height:150px; opacity:0.8;}
 .wh-100 {width:100px; height:100px;}
 .wh-50 {width:50px; height:50px;}
 
 .wh-350:hover{
   opacity:1;
 }
+
 img.centered {
     display: block;
     margin-left: auto;
