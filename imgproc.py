@@ -38,7 +38,8 @@ class Config(object):
 	# GRID_IMAGE_SIZE = (1200,1200)
 	# GRID_IMAGE_SIZE = (200, 200)
 	QUEUE_IMAGE_SIZE = (340, 340)
-	COLORMAP = brewer2mpl.get_map('RdYlGn', 'Diverging', 11)
+	COLORMAP = brewer2mpl.get_map('PuBu', 'Sequential', 9)
+	# COLORMAP = brewer2mpl.get_map('RdYlGn', 'Diverging', 11)
 
 	RANDOM_SCALING_ALPHA = 2
 	RANDOM_SCALING_GAMMA = 5
@@ -89,7 +90,7 @@ def process_images(images_to_process):
 		
 			if args.processing_type == 'queue':
 				queue_processing(image)
-				grid_processing(image)
+				# grid_processing(image)
 			elif args.processing_type == 'random':
 				random_processing(image)
 			elif args.processing_type == 'grid':
@@ -109,7 +110,7 @@ def process_images(images_to_process):
 
 def queue_processing(image):
 	width, height = config.QUEUE_IMAGE_SIZE	
-	processed_image = ip.monochrome(image, config.random_color(), 110, white_background = False)
+	processed_image = ip.monochrome(image, config.random_color(), 150, white_background = False)
 	processed_image = ie.resize_to_size(processed_image, width, height)
 	image_path = save_image(processed_image)
 	upload_image(image_path, URL_BASE + '/upload_queue_image')
@@ -132,12 +133,12 @@ def grid_processing(image):
 			image_path = save_image(processed_image)
 			upload_image(image_path, URL_BASE + '/upload_grid_image')
 		elif args.grid_processing == 'monochrome':
-			processed_image_white = ip.monochrome(image, config.random_color(), 110)
-			processed_image_white = ie.resize_to_size(processed_image_white, width, height)
-			image_path_white = save_image(processed_image_white)
-			upload_image(image_path_white, URL_BASE + '/upload_grid_image_white')
+			# processed_image_white = ip.monochrome(image, config.random_color(), 130)
+			# processed_image_white = ie.resize_to_size(processed_image_white, width, height)
+			# image_path_white = save_image(processed_image_white)
+			# upload_image(image_path_white, URL_BASE + '/upload_grid_image_white')
 
-			processed_image_black = ip.monochrome(image, config.random_color(), 110, white_background = False)
+			processed_image_black = ip.monochrome(image, config.random_color(), 130, white_background = False)
 			processed_image_black = ie.resize_to_size(processed_image_black, width, height)
 			image_path_black = save_image(processed_image_black)
 			upload_image(image_path_black, URL_BASE + '/upload_grid_image_black')
