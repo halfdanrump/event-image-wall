@@ -4,12 +4,36 @@
 a * {border: 0;} 
 
 /*       GRID       */
-.wh-350 {width:350px; height:350px;}
+.wh-350 {width:350px; height:350px; opacity:0.8;}
 .wh-175 {width:175px; height:175px;}
 .wh-200 {width:200px; height:200px;}
 .wh-100 {width:100px; height:100px;}
 .wh-50 {width:50px; height:50px;}
 
+.wh-350:hover{
+  opacity:1;
+}
+img.centered {
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+  }
+
+img.transparent {
+  opacity:0.4;
+}
+
+
+
+#top {
+  position: fixed;
+  top: 0px;
+  left: 0;
+  z-index: 999;
+  width: 100%;
+  height: 100px;
+  background-color: black;
+}
 
 .grid {margin:10px; position:relative; float:left;}
 .grid2 {margin:1px; position:relative; float:left;}
